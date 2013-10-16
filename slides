@@ -1,0 +1,383 @@
+Eliminating Branching, nil, and attributes—Let's get weird
+!TITLE
+Eliminating Branching, nil, and attributes
+Let's get weird
+
+!IMAGE
+http://www.cranemou.com/wp-content/uploads/2012/01/Top-Chef-2011-bilan-des-recettes-publicitaires-de-la-telerealite-culinaire.jpg
+
+!IMAGE
+http://farm2.staticflickr.com/1185/5112065674_84e67f1b41_o.jpg
+
+!IMAGE
+http://farm3.staticflickr.com/2568/4170365807_9964740034_b.jpg
+
+!IMAGE
+http://farm6.staticflickr.com/5229/5817035735_e99b206ae0_o.jpg
+
+!IMAGE
+http://farm7.staticflickr.com/6154/6254480784_1b80df41ee_b.jpg
+
+!SECTION
+The Billion Dollar Mistake
+
+!QUOTE
+I was designing the first comprehensive type system for references in an object oriented language (ALGOL W)…I couldn't resist the temptation to put in a null reference, simply because it was so easy to implement.  This has led to innumerable errors, vulnerabilities, and system crashes, which have probably caused a billion dollars of pain and damage in the last forty years.
+
+!CODE
+params[:person][:first_name]
+
+!CODE
+(params[:person] || {})[:first_name]
+
+!CODE
+unless person.address.nil?
+
+!BULLETS
+No More <code>nil</code>
+* all variables must have a value
+* no default value
+* no global sentinel for "nothing"
+
+!CODE: callout=6
+
+class Person
+  attr_accessor :name, 
+                :birthdate, 
+                :title
+  def initialize(name,birthdate,title=nil)
+    @name      = name
+    @birthdate = birthdate
+    @title     = title
+  end
+  def greeting
+    if title.nil?
+      “Hello #{@name}”
+    else
+      “Hello #{@title} #{@name}”
+    end
+  end
+end
+
+!CODE: callout=11,12,13,14,15,16,17
+
+class Person
+  attr_accessor :name, 
+                :birthdate, 
+                :title
+  def initialize(name,birthdate,title=nil)
+    @name      = name
+    @birthdate = birthdate
+    @title     = title
+  end
+  def greeting
+    if title.nil?
+      “Hello #{@name}”
+    else
+      “Hello #{@title} #{@name}”
+    end
+  end
+end
+
+!CODE: callout=1,6
+$nil = Object.new
+class Person
+  attr_accessor :name, 
+                :birthdate, 
+                :title
+  def initialize(name,birthdate,title=$nil)
+    @name      = name
+    @birthdate = birthdate
+    @title     = title
+  end
+  def greeting
+    if title.nil?
+      “Hello #{@name}”
+    else
+      “Hello #{@title} #{@name}”
+    end
+  end
+end
+
+!CODE
+class Person
+  attr_accessor :name, 
+                :birthdate 
+
+  def initialize(name,birthdate)
+    @name      = name
+    @birthdate = birthdate
+
+  end
+end
+
+!CODE
+class TitledPerson < Person
+  attr_accessor :title
+
+  def initialize(name,birthdate,title)
+    super(name,birthdate)
+    @title = title
+  end
+end
+
+!CODE
+class Person
+  def greeting
+    “Hello #{name}”
+  end
+end
+
+class TitledPerson < Person
+  def greeting
+    “Hello #{title} #{name}”
+  end
+end
+
+!CODE
+if person.title.nil?
+  FormalEmailer.send_email(person)
+else
+  CasualEmailer.send_email(person)
+end
+
+!CODE
+switch person
+when TitledPerson
+  FormalEmailer.send_email(person)
+else
+  CasualEmailer.send_email(person)
+end
+
+!CODE
+person = Person.find(params[:id])
+title  = params[:title]
+person.title = title #?
+
+!CODE
+person = Person.find(params[:id])
+title  = params[:title]
+person = TitledPerson.new(person.name, 
+                          person.birthdate,
+                          title)
+
+!CODE
+$nil = Object.new
+
+!BULLETS
+<code>nil</code>
+* Variable unset
+* Don't know value
+* There is no value
+* Value is "empty"
+
+!CODE
+file://weird/lib/weird/nil_like.rb
+
+!CODE: callout=3
+class Person
+  attr_accessor :name, :birthdate, :title
+  def initialize(name, birthdate, title=Unknown)
+    @name      = name
+    @birthdate = birthdate
+    @title     = title
+  end
+end
+
+!CODE: callout=3
+class Person
+  def greet
+    if title == Unknown
+      "Hello #{name}"
+    else
+      "Hello #{title} #{name}"
+    end
+  end
+end
+
+!CODE
+person = Person.new("Bob",24.years.ago,NoValue)
+puts person.greet
+# => Hello NoValue Bob
+
+!CODE
+file://weird/lib/weird/person_greet_better.rb
+
+!CODE: language=ruby
+file://weird/lib/weird/basic_object.rb
+
+!CODE: language=ruby
+file://weird/lib/weird/nil_like_sentinel.rb
+
+!CODE
+person = Person.new("Bob",24.years.ago,NoValue)
+puts person.greet
+# => Hello Bob
+
+!CODE: language=ruby
+file://weird/lib/weird/person_greet_known_naive.rb
+
+!CODE: language=ruby
+file://weird/lib/weird/known_basic_object.rb
+
+!CODE: language=ruby
+file://weird/lib/weird/known_nil_like_sentinel.rb
+
+!CODE: language=ruby
+file://weird/lib/weird/person_greet_known_better.rb
+
+!CODE
+NoMethodError: undefined method `frobnosticate' for Unassigned:Class
+
+!CODE
+NoMethodError: undefined method `frobnosticate' for NoValue:Class
+
+!SECTION
+Attributes
+
+!BULLETS
+How to buy something
+- Take out wallet
+- Hand to clerk
+- Clerk finds cash or credit card
+- Clerk pays
+- Clerk hands you back your wallet
+
+!CODE: language=ruby
+file://weird/lib/weird/noattr/person.rb
+
+!CODE: language=ruby
+file://weird/lib/weird/noattr/person_greeter.rb
+
+!CODE: language=ruby
+file://weird/lib/weird/noattr/person_greeter_attributes.rb
+
+!CODE: language=ruby
+file://weird/lib/weird/noattr/normalize_address.rb
+
+!CODE: language=ruby
+file://weird/lib/weird/noattr/normalize_address_updater.rb
+
+!CODE: language=ruby
+class Person
+  def update(&block)
+    updater = Updater.new
+    block.call(updater)
+    updater.changed_attributes { |attribute,new_value|
+      self.instance_variable_set("@#{attribute}",value)
+    }
+  end
+end
+
+!CODE: language=ruby callout=5,9
+class Person
+  def update(&block)
+    updater = Updater.new
+    block.call(updater)
+    transaction do
+      updater.changed_attributes { |attribute,new_value|
+        self.instance_variable_set("@#{attribute}",value)
+      }
+    end
+  end
+end
+
+!CODE: language=ruby
+class Person
+  def update(&block)
+    updater = Updater.new
+    block.call(updater)
+    unless zip_and_city_consistent?(updater.city,updater.zip_code)
+      raise "address not consistent"
+    end
+    updater.changed_attributes { |attribute,new_value|
+      self.instance_variable_set("@#{attribute}",value)
+    }
+  end
+end
+
+!SECTION
+<code>if</code>
+
+!IMAGE
+http://farm3.staticflickr.com/2554/3737568827_5f903cf17e_b.jpg
+
+!CODE: language=ruby
+file://weird/lib/weird/anti_if/use_credit_card_service_typical.rb
+
+!CODE: language=ruby
+file://weird/lib/weird/anti_if/use_credit_card_service_better.rb
+
+!CODE: language=ruby
+file://weird/lib/weird/anti_if/use_credit_card_service_betterer.rb
+
+!CODE: language=ruby callout=-8,-9
+file://weird/lib/weird/anti_if/use_credit_card_service_better.rb
+
+!CODE: language=ruby
+file://weird/lib/weird/anti_if/credit_card_charger_mistake.rb
+
+!CODE: language=ruby
+file://weird/lib/weird/anti_if/credit_card_service_strict.rb
+
+!CODE: language=ruby callout=7,8,9
+file://weird/lib/weird/anti_if/credit_card_service_strict_2.rb
+
+!CODE: language=ruby callout=4,5,6,7,8,9,10
+file://weird/lib/weird/anti_if/outcome_handler.rb
+
+!CODE: language=ruby callout=4
+file://weird/lib/weird/anti_if/outcome_handler_no_if.rb
+
+!CODE: language=ruby
+file://weird/lib/weird/anti_if/outcome_handler_no_if_method_step1.rb
+
+!CODE: language=ruby
+file://weird/lib/weird/anti_if/outcome_handler_no_if_method_step2.rb
+
+!CODE: language=ruby
+file://weird/lib/weird/anti_if/outcome_handler_no_if_method_step3.rb
+
+!CODE: language=ruby
+file://weird/lib/weird/anti_if/outcome_handler_no_if_method.rb
+
+!CODE: language=ruby
+logic = Logic.new
+
+logic.on { |status|
+  status == 200
+}.then_return(:call_on_success)
+
+logic.on { |status|
+  status < 500
+}.then_return(:call_on_decline)
+
+logic.evaluate!(status, or_else: :call_on_exception)
+# => BOOM: NonExclusiveDisjunctionError
+
+!CODE: language=ruby callout=8
+logic = Logic.new
+
+logic.on { |status|
+  status == 200
+}.then_return(:call_on_success)
+
+logic.on { |status|
+  status != 200 && status < 500
+}.then_return(:call_on_decline)
+
+logic.evaluate!(status, or_else: :call_on_exception)
+# => All good
+
+!CODE: language=ruby
+logic = Logic.new
+
+logic.on(&Success).then_return(:call_on_success)
+logic.on(&Decline).then_return(:call_on_decline)
+logic.evaluate!(status, or_else: :call_on_exception)
+
+Success = ->(status) { status == 200 }
+Decline = ->(status) { !Success.(status) && status < 500 }
+
+!SECTION
+Whew!
