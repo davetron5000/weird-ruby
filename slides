@@ -2,36 +2,34 @@ Eliminating Branching, nil, and attributes—Let's get weird
 !TITLE
 Eliminating Branching, nil, and attributes
 Let's get weird
+@davetron5000
 
-!IMAGE
-http://www.cranemou.com/wp-content/uploads/2012/01/Top-Chef-2011-bilan-des-recettes-publicitaires-de-la-telerealite-culinaire.jpg
+!NORMAL
+STITCH FIX
 
-!IMAGE
-http://farm2.staticflickr.com/1185/5112065674_84e67f1b41_o.jpg
+!SECTION
+Books Go Here
 
-!IMAGE
-http://farm3.staticflickr.com/2568/4170365807_9964740034_b.jpg
-
-!IMAGE
-http://farm6.staticflickr.com/5229/5817035735_e99b206ae0_o.jpg
-
-!IMAGE
-http://farm7.staticflickr.com/6154/6254480784_1b80df41ee_b.jpg
+-- !IMAGE
+-- http://www.cranemou.com/wp-content/uploads/2012/01/Top-Chef-2011-bilan-des-recettes-publicitaires-de-la-telerealite-culinaire.jpg
+-- 
+-- !IMAGE
+-- http://farm2.staticflickr.com/1185/5112065674_84e67f1b41_o.jpg
+-- 
+-- !IMAGE
+-- http://farm3.staticflickr.com/2568/4170365807_9964740034_b.jpg
+-- 
+-- !IMAGE
+-- http://farm6.staticflickr.com/5229/5817035735_e99b206ae0_o.jpg
+-- 
+-- !IMAGE
+-- http://farm7.staticflickr.com/6154/6254480784_1b80df41ee_b.jpg
 
 !SECTION
 The Billion Dollar Mistake
 
 !QUOTE
 I was designing the first comprehensive type system for references in an object oriented language (ALGOL W)…I couldn't resist the temptation to put in a null reference, simply because it was so easy to implement.  This has led to innumerable errors, vulnerabilities, and system crashes, which have probably caused a billion dollars of pain and damage in the last forty years.
-
-!CODE
-params[:person][:first_name]
-
-!CODE
-(params[:person] || {})[:first_name]
-
-!CODE
-unless person.address.nil?
 
 !BULLETS
 No More <code>nil</code>
@@ -99,7 +97,7 @@ class Person
   end
 end
 
-!CODE
+!CODE: language=ruby
 class Person
   attr_accessor :name, 
                 :birthdate 
@@ -111,7 +109,7 @@ class Person
   end
 end
 
-!CODE
+!CODE: language=ruby
 class TitledPerson < Person
   attr_accessor :title
 
@@ -121,7 +119,7 @@ class TitledPerson < Person
   end
 end
 
-!CODE
+!CODE: language=ruby
 class Person
   def greeting
     “Hello #{name}”
@@ -134,14 +132,14 @@ class TitledPerson < Person
   end
 end
 
-!CODE
+!CODE: language=ruby
 if person.title.nil?
   FormalEmailer.send_email(person)
 else
   CasualEmailer.send_email(person)
 end
 
-!CODE
+!CODE: language=ruby
 switch person
 when TitledPerson
   FormalEmailer.send_email(person)
@@ -149,20 +147,24 @@ else
   CasualEmailer.send_email(person)
 end
 
-!CODE
-person = Person.find(params[:id])
-title  = params[:title]
-person.title = title #?
+!CODE: language=ruby
+person    = Person.find(params[:id])
+new_title = params[:title]
+# ????
 
-!CODE
-person = Person.find(params[:id])
-title  = params[:title]
-person = TitledPerson.new(person.name, 
-                          person.birthdate,
-                          title)
+!CODE: language=ruby
+person    = Person.find(params[:id])
+new_title = params[:title]
+person    = TitledPerson.new(person.name, 
+                             person.birthdate,
+                             new_title)
 
-!CODE
-$nil = Object.new
+!CODE: language=ruby
+$nil = Object.new do
+  def nil?
+    true
+  end
+end
 
 !BULLETS
 <code>nil</code>
@@ -226,11 +228,11 @@ file://weird/lib/weird/known_nil_like_sentinel.rb
 !CODE: language=ruby
 file://weird/lib/weird/person_greet_known_better.rb
 
-!CODE
-NoMethodError: undefined method `frobnosticate' for Unassigned:Class
+!NORMAL
+<pre>NoMethodError: undefined method `frobnosticate' for <strong>Unassigned</strong>:Class</pre>
 
-!CODE
-NoMethodError: undefined method `frobnosticate' for NoValue:Class
+!NORMAL
+<pre>NoMethodError: undefined method `frobnosticate' for <strong>NoValue</strong>:Class</pre>
 
 !SECTION
 Attributes
@@ -244,9 +246,6 @@ How to buy something
 - Clerk hands you back your wallet
 
 !CODE: language=ruby
-file://weird/lib/weird/noattr/person.rb
-
-!CODE: language=ruby
 file://weird/lib/weird/noattr/person_greeter.rb
 
 !CODE: language=ruby
@@ -255,19 +254,11 @@ file://weird/lib/weird/noattr/person_greeter_attributes.rb
 !CODE: language=ruby
 file://weird/lib/weird/noattr/normalize_address.rb
 
-!CODE: language=ruby
+!CODE: language=ruby callout=5,6
 file://weird/lib/weird/noattr/normalize_address_updater.rb
 
 !CODE: language=ruby
-class Person
-  def update(&block)
-    updater = Updater.new
-    block.call(updater)
-    updater.changed_attributes { |attribute,new_value|
-      self.instance_variable_set("@#{attribute}",value)
-    }
-  end
-end
+file://weird/lib/weird/noattr/person_with_update.rb
 
 !CODE: language=ruby callout=5,9
 class Person
@@ -282,13 +273,15 @@ class Person
   end
 end
 
-!CODE: language=ruby
+!CODE: language=ruby callout=5,6,7,8,9
 class Person
   def update(&block)
     updater = Updater.new
     block.call(updater)
-    unless zip_and_city_consistent?(updater.city,updater.zip_code)
-      raise "address not consistent"
+    updater.when_updated do |city,zip_code|
+      unless zip_and_city_consistent?(updater.city,updater.zip_code)
+        raise "address not consistent"
+      end
     end
     updater.changed_attributes { |attribute,new_value|
       self.instance_variable_set("@#{attribute}",value)
@@ -299,8 +292,8 @@ end
 !SECTION
 <code>if</code>
 
-!IMAGE
-http://farm3.staticflickr.com/2554/3737568827_5f903cf17e_b.jpg
+-- !IMAGE
+-- http://farm3.staticflickr.com/2554/3737568827_5f903cf17e_b.jpg
 
 !CODE: language=ruby
 file://weird/lib/weird/anti_if/use_credit_card_service_typical.rb
@@ -326,7 +319,7 @@ file://weird/lib/weird/anti_if/credit_card_service_strict_2.rb
 !CODE: language=ruby callout=4,5,6,7,8,9,10
 file://weird/lib/weird/anti_if/outcome_handler.rb
 
-!CODE: language=ruby callout=4
+!CODE: language=ruby callout=5
 file://weird/lib/weird/anti_if/outcome_handler_no_if.rb
 
 !CODE: language=ruby
@@ -340,6 +333,9 @@ file://weird/lib/weird/anti_if/outcome_handler_no_if_method_step3.rb
 
 !CODE: language=ruby
 file://weird/lib/weird/anti_if/outcome_handler_no_if_method.rb
+
+!CODE: language=ruby
+file://weird/lib/weird/anti_if/outcome_handler_buggy.rb
 
 !CODE: language=ruby
 logic = Logic.new

@@ -25,9 +25,9 @@ describe Outcome do
         called = true
         "foo"
       }
-      result = outcome.handle do
+      result = outcome.handle(
         OpenStruct.new(status: 200)
-      end
+      )
 
       result.should == "foo"
       called.should == true
@@ -39,9 +39,9 @@ describe Outcome do
         called = true
         "foo"
       }
-      result = outcome.handle do
+      result = outcome.handle(
         OpenStruct.new(status: 404)
-      end
+      )
 
       result.should == "foo"
       called.should == true
@@ -53,9 +53,9 @@ describe Outcome do
         called = true
         "foo"
       }
-      result = outcome.handle do
+      result = outcome.handle(
         OpenStruct.new(status: 500)
-      end
+      )
 
       result.should == "foo"
       called.should == true

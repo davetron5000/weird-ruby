@@ -1,10 +1,10 @@
 class Outcome
   def handle(result)
     status = result.status
-    method_name = if status == 200
-                    :call_on_success
-                  elsif status < 500
+    method_name = if status < 500
                     :call_on_decline
+                  elsif status == 200
+                    :call_on_success
                   else
                     :call_on_exception
                   end

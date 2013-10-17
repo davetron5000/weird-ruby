@@ -27,9 +27,7 @@ describe OutcomeNoIf do
         called = true
         "foo"
       }
-      result = outcome.handle do
-        OpenStruct.new(status: 200)
-      end
+      result = outcome.handle( OpenStruct.new(status: 200))
 
       result.should == "foo"
       called.should == true
@@ -41,9 +39,7 @@ describe OutcomeNoIf do
         called = true
         "foo"
       }
-      result = outcome.handle do
-        OpenStruct.new(status: 404)
-      end
+      result = outcome.handle( OpenStruct.new(status: 404) )
 
       result.should == "foo"
       called.should == true
@@ -55,9 +51,7 @@ describe OutcomeNoIf do
         called = true
         "foo"
       }
-      result = outcome.handle do
-        OpenStruct.new(status: 500)
-      end
+      result = outcome.handle( OpenStruct.new(status: 500) )
 
       result.should == "foo"
       called.should == true
