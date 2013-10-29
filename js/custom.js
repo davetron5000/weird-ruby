@@ -8,3 +8,4 @@
  * This file is loaded after trickster.js, so TricksterDefaultConfig should be in scope
  * and mofifiable.
  */
+TricksterDefaultConfig.transitionTime = 10

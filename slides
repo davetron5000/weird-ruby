@@ -6,30 +6,34 @@ Let's get weird
 
 !NORMAL
 STITCH FIX
+Lead Engineer
 
-!SECTION
-Books Go Here
+!IMAGE
+images/dccar.jpg
 
--- !IMAGE
--- http://www.cranemou.com/wp-content/uploads/2012/01/Top-Chef-2011-bilan-des-recettes-publicitaires-de-la-telerealite-culinaire.jpg
--- 
--- !IMAGE
--- http://farm2.staticflickr.com/1185/5112065674_84e67f1b41_o.jpg
--- 
--- !IMAGE
--- http://farm3.staticflickr.com/2568/4170365807_9964740034_b.jpg
--- 
--- !IMAGE
--- http://farm6.staticflickr.com/5229/5817035735_e99b206ae0_o.jpg
--- 
--- !IMAGE
--- http://farm7.staticflickr.com/6154/6254480784_1b80df41ee_b.jpg
+!IMAGE
+images/cover.jpg
+
+!IMAGE
+images/top_chef.jpg
+
+!IMAGE
+images/daikon.jpg
+
+!IMAGE
+images/asian.jpg
+
+!IMAGE
+images/french.jpg
 
 !SECTION
 The Billion Dollar Mistake
 
 !QUOTE
-I was designing the first comprehensive type system for references in an object oriented language (ALGOL W)…I couldn't resist the temptation to put in a null reference, simply because it was so easy to implement.  This has led to innumerable errors, vulnerabilities, and system crashes, which have probably caused a billion dollars of pain and damage in the last forty years.
+I was designing the first comprehensive type system for references in an object oriented language…I couldn't resist the temptation to put in a null reference, simply because it was so easy to implement.
+
+!QUOTE2
+This has led to innumerable errors, vulnerabilities, and system crashes, which have probably caused a <strong>billion dollars</strong> of pain and damage in the last forty years.
 
 !BULLETS
 No More <code>nil</code>
@@ -77,26 +81,6 @@ class Person
   end
 end
 
-!CODE: callout=1,6
-$nil = Object.new
-class Person
-  attr_accessor :name, 
-                :birthdate, 
-                :title
-  def initialize(name,birthdate,title=$nil)
-    @name      = name
-    @birthdate = birthdate
-    @title     = title
-  end
-  def greeting
-    if title.nil?
-      “Hello #{@name}”
-    else
-      “Hello #{@title} #{@name}”
-    end
-  end
-end
-
 !CODE: language=ruby
 class Person
   attr_accessor :name, 
@@ -105,7 +89,6 @@ class Person
   def initialize(name,birthdate)
     @name      = name
     @birthdate = birthdate
-
   end
 end
 
@@ -122,29 +105,14 @@ end
 !CODE: language=ruby
 class Person
   def greeting
-    “Hello #{name}”
+    "Hello #{name}"
   end
 end
 
 class TitledPerson < Person
   def greeting
-    “Hello #{title} #{name}”
+    "Hello #{title} #{name}"
   end
-end
-
-!CODE: language=ruby
-if person.title.nil?
-  FormalEmailer.send_email(person)
-else
-  CasualEmailer.send_email(person)
-end
-
-!CODE: language=ruby
-switch person
-when TitledPerson
-  FormalEmailer.send_email(person)
-else
-  CasualEmailer.send_email(person)
 end
 
 !CODE: language=ruby
@@ -160,6 +128,13 @@ person    = TitledPerson.new(person.name,
                              new_title)
 
 !CODE: language=ruby
+$nil = Object.new do
+  def nil?
+    true
+  end
+end
+
+!CODE: language=ruby callout=-1,-2,-3,-4,-5
 $nil = Object.new do
   def nil?
     true
@@ -292,8 +267,8 @@ end
 !SECTION
 <code>if</code>
 
--- !IMAGE
--- http://farm3.staticflickr.com/2554/3737568827_5f903cf17e_b.jpg
+!IMAGE
+images/asm.jpg
 
 !CODE: language=ruby
 file://weird/lib/weird/anti_if/use_credit_card_service_typical.rb
@@ -377,3 +352,10 @@ Decline = ->(status) { !Success.(status) && status < 500 }
 
 !SECTION
 Whew!
+
+!BULLETS
+THANKS!
+* <a href="https://github.com/davetron5000/weird-ruby">https://github.com/davetron5000/weird-ruby</a>
+* dave@stitchfix.com / @davetron5000
+* <a href="http://tech.stitchfix.com">tech.stitchfix.com</a>
+* http://farm2.staticflickr.com/1185/5112065674_84e67f1b41_o.jpg http://farm3.staticflickr.com/2568/4170365807_9964740034_b.jpg http://farm6.staticflickr.com/5229/5817035735_e99b206ae0_o.jpg http://farm7.staticflickr.com/6154/6254480784_1b80df41ee_b.jpg http://farm3.staticflickr.com/2554/3737568827_5f903cf17e_b.jpg

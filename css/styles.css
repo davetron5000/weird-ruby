@@ -36,7 +36,7 @@ h1 {
 h2, h3, h4 {
   font-family: "Serifa W01 45 Light"; }
 
-p, blockquote, li, section.QUOTE h1 {
+p, blockquote, li, section.QUOTE h1, section.QUOTE2 h1 {
   font-family: "Avenir LT W01 45 Book"; }
 
 pre, code {
@@ -74,8 +74,20 @@ section.COMMANDLINE code {
   background: black;
   color: #00ff00; }
 
+section.QUOTE, section.QUOTE2 {
+  margin-left: 2em;
+  margin-right: 2em;
+  font-style: italic; }
+  section.QUOTE strong, section.QUOTE2 strong {
+    font-weight: bold;
+    font-style: normal;
+    font-size: 150%; }
+
 section.QUOTE {
-  text-align: center; }
+  text-align: left; }
+
+section.QUOTE2 {
+  text-align: right; }
 
 section.COMMANDLINE .cli-prompt {
   font-weight: bold;

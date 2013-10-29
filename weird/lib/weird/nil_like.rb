@@ -1,4 +1,4 @@
-Unassigned = Class.new
-Unknown    = Class.new
-NoValue    = Class.new
-Empty      = Class.new
+class Unassigned; end
+class Unknown;    end
+class NoValue;    end
+class Empty;      end

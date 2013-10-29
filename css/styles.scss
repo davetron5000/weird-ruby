@@ -70,7 +70,7 @@ h2, h3, h4 {
   font-family: $serif;
 }
 
-p, blockquote, li, section.QUOTE h1 {
+p, blockquote, li, section.QUOTE h1, section.QUOTE2 h1 {
   font-family: $sans-serif;
 }
 
@@ -117,8 +117,23 @@ section.COMMANDLINE code {
   color: #00ff00;
 }
 
+section.QUOTE, section.QUOTE2 {
+  margin-left: 2em;
+  margin-right: 2em;
+  font-style: italic;
+  strong {
+    font-weight: bold;
+    font-style: normal;
+    font-size: 150%;
+  }
+}
+
 section.QUOTE {
-  text-align: center;
+  text-align: left;
+}
+
+section.QUOTE2 {
+  text-align: right;
 }
 
 section.COMMANDLINE .cli-prompt {
