@@ -103,7 +103,11 @@ body.COMMANDLINE {
 }
 
 body.CODE {
-  background: $fix-mint;
+  background: $dark-grey;
+}
+
+body.IMAGE {
+  background: white;
 }
 
 section.BULLETS {
@@ -146,12 +150,6 @@ section.COMMANDLINE .cli-command {
 }
 
 section.CODE code {
-  /*
-  border-radius: 30px;
-  */
-  border-bottom-right-radius: 0.5em;
-  border-bottom-left-radius: 0.5em;
-  box-shadow: 0 0.3em 0.2em -0.2em #ddd7c4;
 }
 h1, h2, h3, h4 {
   margin: 0;

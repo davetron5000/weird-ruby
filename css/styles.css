@@ -62,7 +62,10 @@ body.COMMANDLINE {
   background: black; }
 
 body.CODE {
-  background: #b0d7d1; }
+  background: #474749; }
+
+body.IMAGE {
+  background: white; }
 
 section.BULLETS {
   margin-left: 64px; }
@@ -95,14 +98,6 @@ section.COMMANDLINE .cli-prompt {
 
 section.COMMANDLINE .cli-command {
   color: #00ffff; }
-
-section.CODE code {
-  /*
-  border-radius: 30px;
-  */
-  border-bottom-right-radius: 0.5em;
-  border-bottom-left-radius: 0.5em;
-  box-shadow: 0 0.3em 0.2em -0.2em #ddd7c4; }
 
 h1, h2, h3, h4 {
   margin: 0; }
