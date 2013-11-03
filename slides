@@ -90,6 +90,10 @@ class Person
     @name      = name
     @birthdate = birthdate
   end
+
+  def greeting
+    "Hello #{name}"
+  end
 end
 
 !CODE: language=ruby
@@ -100,16 +104,7 @@ class TitledPerson < Person
     super(name,birthdate)
     @title = title
   end
-end
 
-!CODE: language=ruby
-class Person
-  def greeting
-    "Hello #{name}"
-  end
-end
-
-class TitledPerson < Person
   def greeting
     "Hello #{title} #{name}"
   end
@@ -152,6 +147,26 @@ end
 file://weird/lib/weird/nil_like.rb
 
 !CODE: callout=3
+class Person
+  attr_accessor :name, :birthdate, :title
+  def initialize(name, birthdate, title=Unknown)
+    @name      = name
+    @birthdate = birthdate
+    @title     = title
+  end
+end
+
+!CODE: callout=3
+class Person
+  attr_accessor :name, :birthdate, :title
+  def initialize(name, birthdate, title=NoValue)
+    @name      = name
+    @birthdate = birthdate
+    @title     = title
+  end
+end
+
+!CODE
 class Person
   attr_accessor :name, :birthdate, :title
   def initialize(name, birthdate, title=Unknown)
@@ -379,7 +394,7 @@ private
     logic = Logic.new
 
     logic.on { |status| status == 200 }.then_return(:call_on_success)
-    logic.on { |status| status < 500  }.then_return(:call_on_decline)
+    logic.on { |status| status  < 500 }.then_return(:call_on_decline)
 
     logic.evaluate!(status, or_else: :call_on_exception)
     # => BOOM: NonExclusiveDisjunctionError
@@ -395,7 +410,8 @@ private
     logic = Logic.new
 
     logic.on { |status| status == 200 }.then_return(:call_on_success)
-    logic.on { |status| status != 200 && status < 500  }.then_return(:call_on_decline)
+    logic.on { |status| status != 200 && 
+                        status  < 500 }.then_return(:call_on_decline)
 
     logic.evaluate!(status, or_else: :call_on_exception)
     # => All good!
