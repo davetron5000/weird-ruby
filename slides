@@ -8,10 +8,10 @@ Let's get weird
 STITCH FIX
 Lead Engineer
 
-!IMAGE
+!IMAGE: background=EFEFEF
 images/dccar.jpg
 
-!IMAGE
+!IMAGE: background=EFEFEF
 images/cover.jpg
 
 !IMAGE
@@ -54,9 +54,9 @@ class Person
   end
   def greeting
     if title.nil?
-      “Hello #{@name}”
+      "Hello #{@name}"
     else
-      “Hello #{@title} #{@name}”
+      "Hello #{@title} #{@name}"
     end
   end
 end
@@ -74,9 +74,9 @@ class Person
   end
   def greeting
     if title.nil?
-      “Hello #{@name}”
+      "Hello #{@name}"
     else
-      “Hello #{@title} #{@name}”
+      "Hello #{@title} #{@name}"
     end
   end
 end
@@ -267,7 +267,7 @@ end
 !SECTION
 <code>if</code>
 
-!IMAGE
+!IMAGE: background=000
 images/asm.jpg
 
 !CODE: language=ruby
@@ -298,13 +298,68 @@ file://weird/lib/weird/anti_if/outcome_handler.rb
 file://weird/lib/weird/anti_if/outcome_handler_no_if.rb
 
 !CODE: language=ruby
-file://weird/lib/weird/anti_if/outcome_handler_no_if_method_step1.rb
+class OutcomeNoIf < Outcome
+
+private 
+
+  def method_for_status(status)
+
+                if ( status == 200 )  :call_on_success
+                if ( status <  500 )  :call_on_decline
+
+
+
+    else      :call_on_exception
+  end
+end
 
 !CODE: language=ruby
-file://weird/lib/weird/anti_if/outcome_handler_no_if_method_step2.rb
+class OutcomeNoIf < Outcome
+
+private 
+
+  def method_for_status(status)
+
+       -> (status) { status == 200 }, :call_on_success
+       -> (status) { status <  500 }, :call_on_decline
+
+
+
+    else      :call_on_exception
+  end
+end
 
 !CODE: language=ruby
-file://weird/lib/weird/anti_if/outcome_handler_no_if_method_step3.rb
+class OutcomeNoIf < Outcome
+
+private 
+
+  def method_for_status(status)
+    [
+     [ -> (status) { status == 200 }, :call_on_success ],
+     [ -> (status) { status <  500 }, :call_on_decline ],
+    ]
+    
+    
+    else      :call_on_exception
+  end
+end
+
+!CODE: language=ruby
+class OutcomeNoIf < Outcome
+
+private 
+
+  def method_for_status(status)
+    [
+     [ -> (status) { status == 200 }, :call_on_success ],
+     [ -> (status) { status <  500 }, :call_on_decline ],
+    ].detect { |predicate,_|
+      predicate.(status)
+    }
+    else      :call_on_exception
+  end
+end
 
 !CODE: language=ruby
 file://weird/lib/weird/anti_if/outcome_handler_no_if_method.rb
@@ -313,42 +368,57 @@ file://weird/lib/weird/anti_if/outcome_handler_no_if_method.rb
 file://weird/lib/weird/anti_if/outcome_handler_buggy.rb
 
 !CODE: language=ruby
-logic = Logic.new
-
-logic.on { |status|
-  status == 200
-}.then_return(:call_on_success)
-
-logic.on { |status|
-  status < 500
-}.then_return(:call_on_decline)
-
-logic.evaluate!(status, or_else: :call_on_exception)
-# => BOOM: NonExclusiveDisjunctionError
-
-!CODE: language=ruby callout=8
-logic = Logic.new
-
-logic.on { |status|
-  status == 200
-}.then_return(:call_on_success)
-
-logic.on { |status|
-  status != 200 && status < 500
-}.then_return(:call_on_decline)
-
-logic.evaluate!(status, or_else: :call_on_exception)
-# => All good
+file://weird/lib/weird/anti_if/outcome_handler_no_if_method.rb
 
 !CODE: language=ruby
-logic = Logic.new
+class OutcomeNoIf < Outcome
 
-logic.on(&Success).then_return(:call_on_success)
-logic.on(&Decline).then_return(:call_on_decline)
-logic.evaluate!(status, or_else: :call_on_exception)
+private 
 
-Success = ->(status) { status == 200 }
-Decline = ->(status) { !Success.(status) && status < 500 }
+  def method_for_status(status)
+    logic = Logic.new
+
+    logic.on { |status| status == 200 }.then_return(:call_on_success)
+    logic.on { |status| status < 500  }.then_return(:call_on_decline)
+
+    logic.evaluate!(status, or_else: :call_on_exception)
+    # => BOOM: NonExclusiveDisjunctionError
+  end
+end
+
+!CODE: language=ruby callout=9
+class OutcomeNoIf < Outcome
+
+private 
+
+  def method_for_status(status)
+    logic = Logic.new
+
+    logic.on { |status| status == 200 }.then_return(:call_on_success)
+    logic.on { |status| status != 200 && status < 500  }.then_return(:call_on_decline)
+
+    logic.evaluate!(status, or_else: :call_on_exception)
+    # => All good!
+  end
+end
+
+!CODE: language=ruby callout=8,9,14,15
+class OutcomeNoIf < Outcome
+
+private 
+
+  def method_for_status(status)
+    logic = Logic.new
+
+    logic.on(&Success).then_return(:call_on_success)
+    logic.on(&Decline).then_return(:call_on_decline)
+
+    logic.evaluate!(status, or_else: :call_on_exception)
+  end
+
+  Success = ->(status) { status == 200 }
+  Decline = ->(status) { !Success.(status) && status < 500 }
+end
 
 !SECTION
 Whew!

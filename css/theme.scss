@@ -1,6 +1,6 @@
 @import "colors.scss";
 
-$bg-color           : $dark-grey;
+$bg-color           : rgba(0,0,0,0);
 $default-fg-color   : $light-grey;
 $selection-bg-color : $light-grey;
 $selection-fg-color : $dark-grey;
@@ -320,5 +320,6 @@ pre .line-callout::before {
 .lines-callout {
   padding-top: 0.1em;
   padding-bottom: 0.1em;
-  background: $callout-bg-color;
+  background-color: $callout-bg-color;
+  background: -webkit-linear-gradient(left, $callout-bg-color, lighten($callout-bg-color,10%));
 }

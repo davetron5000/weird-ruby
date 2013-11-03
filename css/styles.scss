@@ -89,13 +89,23 @@ section.TITLE, section.SECTION, section.IMAGE, section.NORMAL {
   text-align: center;
 }
 
+html {
+  height: 100%;
+}
+
 body {
   color: $dark-grey;
-  background: $fix-mint;
+  background-color: $fix-mint;
+  background: -webkit-linear-gradient(top, $fix-mint, darken($fix-mint,30%));
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  height: 100%;
+  margin: 0;
 }
 
 body.TITLE, body.SECTION {
-  background: $fix-citron;
+  background-color: $fix-citron;
+  background: -webkit-linear-gradient(top, $fix-citron, lighten($fix-citron,15%));
 }
 
 body.COMMANDLINE {
@@ -103,7 +113,8 @@ body.COMMANDLINE {
 }
 
 body.CODE {
-  background: $dark-grey;
+  background-color: $dark-grey;
+  background: -webkit-linear-gradient(top, $dark-grey, darken($dark-grey,15%));
 }
 
 body.IMAGE {
@@ -122,8 +133,7 @@ section.COMMANDLINE code {
 }
 
 section.QUOTE, section.QUOTE2 {
-  margin-left: 2em;
-  margin-right: 2em;
+  margin:2em;
   font-style: italic;
   strong {
     font-weight: bold;

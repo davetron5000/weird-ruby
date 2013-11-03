@@ -51,18 +51,28 @@ h1 pre strong {
 section.TITLE, section.SECTION, section.IMAGE, section.NORMAL {
   text-align: center; }
 
+html {
+  height: 100%; }
+
 body {
   color: #474749;
-  background: #b0d7d1; }
+  background-color: #b0d7d1;
+  background: -webkit-linear-gradient(top, #b0d7d1, #509e92);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  height: 100%;
+  margin: 0; }
 
 body.TITLE, body.SECTION {
-  background: #eee249; }
+  background-color: #eee249;
+  background: -webkit-linear-gradient(top, #eee249, #f5ed8f); }
 
 body.COMMANDLINE {
   background: black; }
 
 body.CODE {
-  background: #474749; }
+  background-color: #474749;
+  background: -webkit-linear-gradient(top, #474749, #212122); }
 
 body.IMAGE {
   background: white; }
@@ -78,8 +88,7 @@ section.COMMANDLINE code {
   color: #00ff00; }
 
 section.QUOTE, section.QUOTE2 {
-  margin-left: 2em;
-  margin-right: 2em;
+  margin: 2em;
   font-style: italic; }
   section.QUOTE strong, section.QUOTE2 strong {
     font-weight: bold;
