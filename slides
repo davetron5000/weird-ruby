@@ -291,9 +291,6 @@ file://weird/lib/weird/anti_if/use_credit_card_service_typical.rb
 !CODE: language=ruby
 file://weird/lib/weird/anti_if/use_credit_card_service_better.rb
 
-!CODE: language=ruby
-file://weird/lib/weird/anti_if/use_credit_card_service_betterer.rb
-
 !CODE: language=ruby callout=-8,-9
 file://weird/lib/weird/anti_if/use_credit_card_service_better.rb
 
