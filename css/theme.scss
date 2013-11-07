@@ -321,5 +321,4 @@ pre .line-callout::before {
   padding-top: 0.1em;
   padding-bottom: 0.1em;
   background-color: $callout-bg-color;
-  background: -webkit-linear-gradient(left, $callout-bg-color, lighten($callout-bg-color,10%));
 }

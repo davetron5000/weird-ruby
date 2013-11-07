@@ -224,5 +224,4 @@ pre .line-callout::before {
 .lines-callout {
   padding-top: 0.1em;
   padding-bottom: 0.1em;
-  background-color: #151515;
-  background: -webkit-linear-gradient(left, #151515, #2e2e2f); }
+  background-color: #151515; }

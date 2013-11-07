@@ -33,7 +33,7 @@ The Billion Dollar Mistake
 I was designing the first comprehensive type system for references in an object oriented language…I couldn't resist the temptation to put in a null reference, simply because it was so easy to implement.
 
 !QUOTE2
-This has led to innumerable errors, vulnerabilities, and system crashes, which have probably caused a <strong>billion dollars</strong> of pain and damage in the last forty years.
+This has led to innumerable errors, vulnerabilities, and system crashes, which have probably caused <strong>a billion dollars of pain and damage in the last forty years.</strong>
 
 !BULLETS
 No More <code>nil</code>
@@ -109,18 +109,6 @@ class TitledPerson < Person
     "Hello #{title} #{name}"
   end
 end
-
-!CODE: language=ruby
-person    = Person.find(params[:id])
-new_title = params[:title]
-# ????
-
-!CODE: language=ruby
-person    = Person.find(params[:id])
-new_title = params[:title]
-person    = TitledPerson.new(person.name, 
-                             person.birthdate,
-                             new_title)
 
 !CODE: language=ruby
 $nil = Object.new do
@@ -394,6 +382,22 @@ private
     logic.on { |status| status  < 500 }.then_return(:call_on_decline)
 
     logic.evaluate!(status, or_else: :call_on_exception)
+
+  end
+end
+
+!CODE: language=ruby callout=11,12
+class OutcomeNoIf < Outcome
+
+private 
+
+  def method_for_status(status)
+    logic = Logic.new
+
+    logic.on { |status| status == 200 }.then_return(:call_on_success)
+    logic.on { |status| status  < 500 }.then_return(:call_on_decline)
+
+    logic.evaluate!(status, or_else: :call_on_exception)
     # => BOOM: NonExclusiveDisjunctionError
   end
 end
@@ -437,8 +441,63 @@ end
 Whew!
 
 !BULLETS
-THANKS!
-* <a href="https://github.com/davetron5000/weird-ruby">https://github.com/davetron5000/weird-ruby</a>
-* dave@stitchfix.com / @davetron5000
-* <a href="http://tech.stitchfix.com">tech.stitchfix.com</a>
-* http://farm2.staticflickr.com/1185/5112065674_84e67f1b41_o.jpg http://farm3.staticflickr.com/2568/4170365807_9964740034_b.jpg http://farm6.staticflickr.com/5229/5817035735_e99b206ae0_o.jpg http://farm7.staticflickr.com/6154/6254480784_1b80df41ee_b.jpg http://farm3.staticflickr.com/2554/3737568827_5f903cf17e_b.jpg
+Work @ Stitch Fix
+* No Pro{ject,duct} Managers
+* No QA
+* A simple and totally working business model
+* Info <a href="http://tech.stitchfix.com">tech.stitchfix.com</a>
+
+!FREEFORM
+<h1>THANKS!</1>
+<table><tbody>
+  <tr>
+    <td style="text-align: right"><h3>Slides</h3></td>
+    <td style="white-space: nowrap"><h3>@</h3></td>
+    <td style="white-space: nowrap; text-align: left"><h3><a href="http://bit.ly/weird-ruby">bit.ly/weird-ruby</a></h3></td>
+  </tr>
+  <tr>
+    <td style="text-align: right"><h3>Source</h3></td>
+    <td style="white-space: nowrap"><h3>@</h3></td>
+    <td style="white-space: nowrap; text-align: left"><h3> <a href="http://bit.ly/weird-ruby-source">bit.ly/weird-ruby-source</a></h3></td>
+  </tr>
+  <tr>
+    <td style="text-align: right; white-space: nowrap; vertical-align: top"><h3>Buy my book</h3></td>
+    <td style="white-space: nowrap; vertical-align: top"><h3>@</h3></td>
+    <td style="text-align:left; vertical-align: top"><h3> <a href="http://sweng.me">sweng.me</a>, <strong>just $10 with code RUBYCONF</strong></h3></td>
+  </tr>
+</tbody></table>
+<!--
+<h2>Slides @ <a href="http://bit.ly/weird-ruby">bit.ly/weird-ruby</a></h2>
+<h2>Source @ <a href="http://bit.ly/weird-ruby-source">bit.ly/weird-ruby-source</a></h2>
+<h2>Buy my book @ <a href="http://sweng.me">sweng.me</a>, <strong>just $10 with code RUBYCONF</strong></h2>
+-->
+
+!FREEFORM
+<h1>Colophon</h1>
+<hr style="width: 33%">
+<h2>Titles in Serifa</h2>
+<h2 class="mono">Code Listings in Source Code Pro</h2>
+<h2 class="sans">Other Text in Avenir</h2>
+<p class="small">All fonts may not be available over the web</p>
+<hr style="width: 33%">
+<h3>Make your own slideshow with <a href="http://github.com/davetron5000/trickster">trickster</a></h3>
+<div class="images">
+<h3>CC-licensed images used:</h3>
+<table><tbody>
+  <tr>
+    <td class="url"> http://farm2.staticflickr.com/1185/5112065674_84e67f1b41_o.jpg </td>
+  </tr>
+  <tr>
+    <td class="url"> http://farm3.staticflickr.com/2568/4170365807_9964740034_b.jpg </td>
+  </tr>
+  <tr>
+    <td class="url"> http://farm6.staticflickr.com/5229/5817035735_e99b206ae0_o.jpg </td>
+  </tr>
+  <tr>
+    <td class="url"> http://farm7.staticflickr.com/6154/6254480784_1b80df41ee_b.jpg </td>
+  </tr>
+  <tr>
+    <td class="url"> http://farm3.staticflickr.com/2554/3737568827_5f903cf17e_b.jpg </td>
+  </tr>
+</tbody></table>
+</div>

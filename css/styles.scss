@@ -70,6 +70,19 @@ h2, h3, h4 {
   font-family: $serif;
 }
 
+.sans {
+  font-family: $sans-serif;
+}
+
+.mono {
+  font-family: $monospace;
+}
+
+.small {
+  font-size: 50%;
+  font-style: italic;
+}
+
 p, blockquote, li, section.QUOTE h1, section.QUOTE2 h1 {
   font-family: $sans-serif;
 }
@@ -85,7 +98,7 @@ h1 pre strong {
   font-weight: bold;
 }
 
-section.TITLE, section.SECTION, section.IMAGE, section.NORMAL {
+section.TITLE, section.SECTION, section.IMAGE, section.NORMAL, section.FREEFORM {
   text-align: center;
 }
 
@@ -121,10 +134,10 @@ body.IMAGE {
   background: white;
 }
 
-section.BULLETS {
+section.BULLETS, section.FREEFORM {
   margin-left: 64px;
 }
-section.BULLETS h1 {
+section.BULLETS h1, section.FREEFORM h1 {
   text-align: center;
 }
 section.COMMANDLINE code {
@@ -170,6 +183,9 @@ h2 {
 h3 {
   font-size: 80%;
 }
+h4 {
+  font-size: 70%;
+}
 p, li {
 }
 
@@ -181,11 +197,28 @@ li {
   line-height: 2em;
 }
 
+.images {
+  margin-top: 1em;
+}
+table {
+  margin: 0 auto;
+
+  td.image {
+    text-align: right;
+  }
+
+  tr td.url {
+    text-align: left;
+    font-size: 40%;
+  }
+}
+
 #timer {
   position: fixed;
   left: 1em;
   bottom: 1em;
   color: white;
+  font-size: 200%;
 }
 
 #timer .seconds {
