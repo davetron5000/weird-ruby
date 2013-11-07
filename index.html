@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Eliminating Branching, nil, and attributes—Let's get weird</title>
+    <meta charset="utf-8">
+    <meta name="description" content="Eliminating Branching, nil, and attributes—Let's get weird">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="js/lib/jquery-1.8.0.min.js"></script>
+    <script src="js/lib/highlight-7.1.min.js"></script>
+    <script src="js/lib/jquerytypewriter.js"></script>
+    <script src="js/lib/underscore-1.3.3.min.js"></script>
+    <script src="js/lib/jquery.touchSwipe.min.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/sizer.js"></script>
+    <script src="js/bullets.js"></script>
+    <script src="js/trickster.js"></script>
+    <script src="js/timer.js"></script>
+    <script src="js/custom.js"></script>
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <script>
+      $(window).load(function() {
+        TricksterTimer = TricksterTimer(TricksterDefaultConfig,{});
+        TricksterTimer.setup();
+
+        Trickster = TricksterLoader(TricksterDefaultConfig,{});
+        Trickster.load(TricksterTimer);
+
+      });
+    </script>
+  </head>
+  <body><div id="contents">
+    <section class='TITLE'>
+<h1>Eliminating Branching, nil, and attributes</h1>
+<h2>Let's get weird</h2>
+<h3>@davetron5000</h3>
+</section>
+<section class='NORMAL'>
+<h1>STITCH FIX</h1>
+<h2>Lead Engineer</h2>
+</section>
+<section class='IMAGE' data-background='EFEFEF'>
+<img src='images/dccar.jpg'>
+</section>
+<section class='IMAGE' data-background='EFEFEF'>
+<img src='images/cover.jpg'>
+</section>
+<section class='IMAGE'>
+<img src='images/top_chef.jpg'>
+</section>
+<section class='IMAGE'>
+<img src='images/daikon.jpg'>
+</section>
+<section class='IMAGE'>
+<img src='images/asian.jpg'>
+</section>
+<section class='IMAGE'>
+<img src='images/french.jpg'>
+</section>
+<section class='SECTION'>
+<h1>The Billion Dollar Mistake</h1>
+</section>
+<section class='QUOTE'>
+<h1>I was designing the first comprehensive type system for references in an object oriented language…I couldn't resist the temptation to put in a null reference, simply because it was so easy to implement.</h1>
+</section>
+<section class='QUOTE2'>
+<h1>This has led to innumerable errors, vulnerabilities, and system crashes, which have probably caused a <strong>billion dollars</strong> of pain and damage in the last forty years.</h1>
+</section>
+<section class='BULLETS'>
+<h1>No More <code>nil</code></h1>
+<ul>
+<li>all variables must have a value</li>
+<li>no default value</li>
+<li>no global sentinel for "nothing"</li>
+</ul>
+</section>
+<section class='CODE'>
+<pre><code data-strikeouts='' data-callout-lines='6'><span class='line line-1 ' ></span>
+<span class='line line-2 ' >class Person</span>
+<span class='line line-3 ' >  attr_accessor :name, </span>
+<span class='line line-4 ' >                :birthdate, </span>
+<span class='line line-5 ' >                :title</span>
+<div class='lines-callout'><span class='line line-6 line-callout' >  def initialize(name,birthdate,title=nil)</span>
+</div><span class='line line-7 ' >    @name      = name</span>
+<span class='line line-8 ' >    @birthdate = birthdate</span>
+<span class='line line-9 ' >    @title     = title</span>
+<span class='line line-10 ' >  end</span>
+<span class='line line-11 ' >  def greeting</span>
+<span class='line line-12 ' >    if title.nil?</span>
+<span class='line line-13 ' >      "Hello #{@name}"</span>
+<span class='line line-14 ' >    else</span>
+<span class='line line-15 ' >      "Hello #{@title} #{@name}"</span>
+<span class='line line-16 ' >    end</span>
+<span class='line line-17 ' >  end</span>
+<span class='line line-18 ' >end</span></code></pre>
+</section>
+<section class='CODE'>
+<pre><code data-strikeouts='' data-callout-lines='11,12,13,14,15,16,17'><span class='line line-1 ' ></span>
+<span class='line line-2 ' >class Person</span>
+<span class='line line-3 ' >  attr_accessor :name, </span>
+<span class='line line-4 ' >                :birthdate, </span>
+<span class='line line-5 ' >                :title</span>
+<span class='line line-6 ' >  def initialize(name,birthdate,title=nil)</span>
+<span class='line line-7 ' >    @name      = name</span>
+<span class='line line-8 ' >    @birthdate = birthdate</span>
+<span class='line line-9 ' >    @title     = title</span>
+<span class='line line-10 ' >  end</span>
+<div class='lines-callout'><span class='line line-11 line-callout' >  def greeting</span>
+<span class='line line-12 line-callout' >    if title.nil?</span>
+<span class='line line-13 line-callout' >      "Hello #{@name}"</span>
+<span class='line line-14 line-callout' >    else</span>
+<span class='line line-15 line-callout' >      "Hello #{@title} #{@name}"</span>
+<span class='line line-16 line-callout' >    end</span>
+<span class='line line-17 line-callout' >  end</span>
+</div><span class='line line-18 ' >end</span></code></pre>
+</section>
+<section class='CODE'>
+<pre><code class='ruby' data-strikeouts='' data-callout-lines=''><span class='line line-1 ' >class Person</span>
+<span class='line line-2 ' >  attr_accessor :name, </span>
+<span class='line line-3 ' >                :birthdate </span>
+<span class='line line-4 ' ></span>
+<span class='line line-5 ' >  def initialize(name,birthdate)</span>
+<span class='line line-6 ' >    @name      = name</span>
+<span class='line line-7 ' >    @birthdate = birthdate</span>
+<span class='line line-8 ' >  end</span>
+<span class='line line-9 ' ></span>
+<span class='line line-10 ' >  def greeting</span>
+<span class='line line-11 ' >    "Hello #{name}"</span>
+<span class='line line-12 ' >  end</span>
+<span class='line line-13 ' >end</span></code></pre>
+</section>
+<section class='CODE'>
+<pre><code class='ruby' data-strikeouts='' data-callout-lines=''><span class='line line-1 ' >class TitledPerson < Person</span>
+<span class='line line-2 ' >  attr_accessor :title</span>
+<span class='line line-3 ' ></span>
+<span class='line line-4 ' >  def initialize(name,birthdate,title)</span>
+<span class='line line-5 ' >    super(name,birthdate)</span>
+<span class='line line-6 ' >    @title = title</span>
+<span class='line line-7 ' >  end</span>
+<span class='line line-8 ' ></span>
+<span class='line line-9 ' >  def greeting</span>
+<span class='line line-10 ' >    "Hello #{title} #{name}"</span>
+<span class='line line-11 ' >  end</span>
+<span class='line line-12 ' >end</span></code></pre>
+</section>
+<section class='CODE'>
+<pre><code class='ruby' data-strikeouts='' data-callout-lines=''><span class='line line-1 ' >person    = Person.find(params[:id])</span>
+<span class='line line-2 ' >new_title = params[:title]</span>
+<span class='line line-3 ' ># ????</span></code></pre>
+</section>
+<section class='CODE'>
+<pre><code class='ruby' data-strikeouts='' data-callout-lines=''><span class='line line-1 ' >person    = Person.find(params[:id])</span>
+<span class='line line-2 ' >new_title = params[:title]</span>
+<span class='line line-3 ' >person    = TitledPerson.new(person.name, </span>
+<span class='line line-4 ' >                             person.birthdate,</span>
+<span class='line line-5 ' >                             new_title)</span></code></pre>
+</section>
+<section class='CODE'>
+<pre><code class='ruby' data-strikeouts='' data-callout-lines=''><span class='line line-1 ' >$nil = Object.new do</span>
+<span class='line line-2 ' >  def nil?</span>
+<span class='line line-3 ' >    true</span>
+<span class='line line-4 ' >  end</span>
+<span class='line line-5 ' >end</span></code></pre>
+</section>
+<section class='CODE'>
+<pre><code class='ruby' data-strikeouts='1,2,3,4,5' data-callout-lines='1,2,3,4,5'><div class='lines-callout'><span class='line line-1 line-callout' >$nil = Object.new do</span>
+<span class='line line-2 line-callout' >  def nil?</span>
+<span class='line line-3 line-callout' >    true</span>
+<span class='line line-4 line-callout' >  end</span>
+<span class='line line-5 line-callout' >end</span></div></code></pre>
+</section>
+<section class='BULLETS'>
+<h1><code>nil</code></h1>
+<ul>
+<li>Variable unset</li>
+<li>Don't know value</li>
+<li>There is no value</li>
+<li>Value is "empty"</li>
+</ul>
+</section>
+<section class='CODE'>
+<pre><code class='ruby'data-strikeouts='' data-callout-lines=''><span class='line line-1 ' >class Unassigned; end</span>
+<span class='line line-2 ' >class Unknown;    end</span>
+<span class='line line-3 ' >class NoValue;    end</span>
+<span class='line line-4 ' >class Empty;      end</span></code></pre>
+</section>
+<section class='CODE'>
+<pre><code data-strikeouts='' data-callout-lines='3'><span class='line line-1 ' >class Person</span>
+<span class='line line-2 ' >  attr_accessor :name, :birthdate, :title</span>
+<div class='lines-callout'><span class='line line-3 line-callout' >  def initialize(name, birthdate, title=Unknown)</span>
+</div><span class='line line-4 ' >    @name      = name</span>
+<span class='line line-5 ' >    @birthdate = birthdate</span>
+<span class='line line-6 ' >    @title     = title</span>
+<span class='line line-7 ' >  end</span>
+<span class='line line-8 ' >end</span></code></pre>
+</section>
+<section class='CODE'>
+<pre><code data-strikeouts='' data-callout-lines='3'><span class='line line-1 ' >class Person</span>
+<span class='line line-2 ' >  attr_accessor :name, :birthdate, :title</span>
+<div class='lines-callout'><span class='line line-3 line-callout' >  def initialize(name, birthdate, title=NoValue)</span>
+</div><span class='line line-4 ' >    @name      = name</span>
+<span class='line line-5 ' >    @birthdate = birthdate</span>
+<span class='line line-6 ' >    @title     = title</span>
+<span class='line line-7 ' >  end</span>
+<span class='line line-8 ' >end</span></code></pre>
+</section>
+<section class='CODE'>
+<pre><code data-strikeouts='' data-callout-lines=''><span class='line line-1 ' >class Person</span>
+<span class='line line-2 ' >  attr_accessor :name, :birthdate, :title</span>
+<span class='line line-3 ' >  def initialize(name, birthdate, title=Unknown)</span>
+<span class='line line-4 ' >    @name      = name</span>
+<span class='line line-5 ' >    @birthdate = birthdate</span>
+<span class='line line-6 ' >    @title     = title</span>
+<span class='line line-7 ' >  end</span>
+<span class='line line-8 ' >end</span></code></pre>
+</section>
+<section class='CODE'>
+<pre><code data-strikeouts='' data-callout-lines='3'><span class='line line-1 ' >class Person</span>
+<span class='line line-2 ' >  def greet</span>
+<div class='lines-callout'><span class='line line-3 line-callout' >    if title == Unknown</span>
+</div><span class='line line-4 ' >      "Hello #{name}"</span>
+<span class='line line-5 ' >    else</span>
+<span class='line line-6 ' >      "Hello #{title} #{name}"</span>
+<span class='line line-7 ' >    end</span>
+<span class='line line-8 ' >  end</span>
+<span class='line line-9 ' >end</span></code></pre>
+</section>
+<section class='CODE'>
+<pre><code data-strikeouts='' data-callout-lines=''><span class='line line-1 ' >person = Person.new("Bob",24.years.ago,NoValue)</span>
+<span class='line line-2 ' >puts person.greet</span>
+<span class='line line-3 ' ># => Hello NoValue Bob</span></code></pre>
+</section>
+<section class='CODE'>
+<pre><code class='ruby'data-strikeouts='' data-callout-lines=''><span class='line line-1 ' >class Person</span>
+<span class='line line-2 ' >  def greet</span>
+<span class='line line-3 ' >    title.when_value {</span>
+<span class='line line-4 ' >      "Hello #{title} #{name}"</span>
+<span class='line line-5 ' >    }.or_else {</span>
+<span class='line line-6 ' >      "Hello #{name}"</span>
+<span class='line line-7 ' >    }</span>
+<span class='line line-8 ' >  end</span>
+<span class='line line-9 ' >end</span></code></pre>
+</section>
+<section class='CODE'>
+<pre><code class='ruby' data-strikeouts='' data-callout-lines=''><span class='line line-1 ' >class BasicObject</span>
+<span class='line line-2 ' >  def when_value(&block)</span>
+<span class='line line-3 ' >    block.call(self)</span>
+<span class='line line-4 ' >  end</span>
+<span class='line line-5 ' >  def or_else(*)</span>
+<span class='line line-6 ' >    self</span>
+<span class='line line-7 ' >  end</span>
+<span class='line line-8 ' >end</span></code></pre>
+</section>
+<section class='CODE'>
+<pre><code class='ruby' data-strikeouts='' data-callout-lines=''><span class='line line-1 ' >class NilLikeSentinel</span>
+<span class='line line-2 ' >  def self.when_value(*)</span>
+<span class='line line-3 ' >    self</span>
+<span class='line line-4 ' >  end</span>
+<span class='line line-5 ' ></span>
+<span class='line line-6 ' >  def self.or_else(&block)</span>
+<span class='line line-7 ' >    block.call</span>
+<span class='line line-8 ' >  end</span>
+<span class='line line-9 ' >end</span>
+<span class='line line-10 ' ></span>
+<span class='line line-11 ' >Unassigned = Class.new(NilLikeSentinel)</span>
+<span class='line line-12 ' >Unknown    = Class.new(NilLikeSentinel)</span>
+<span class='line line-13 ' >NoValue    = Class.new(NilLikeSentinel)</span>
+<span class='line line-14 ' >Empty      = Class.new(NilLikeSentinel)</span></code></pre>
+</section>
+<section class='CODE'>
+<pre><code data-strikeouts='' data-callout-lines=''><span class='line line-1 ' >person = Person.new("Bob",24.years.ago,NoValue)</span>
+<span class='line line-2 ' >puts person.greet</span>
+<span class='line line-3 ' ># => Hello Bob</span></code></pre>
+</section>
+<section class='CODE'>
+<pre><code class='ruby' data-strikeouts='' data-callout-lines=''><span class='line line-1 ' >class Person</span>
+<span class='line line-2 ' >  def greet</span>
+<span class='line line-3 ' >    title.when_value {</span>
+<span class='line line-4 ' >      "Hello #{title} #{name}"</span>
+<span class='line line-5 ' >    }.or_else {</span>
+<span class='line line-6 ' >      if title == Unassigned || title == Unknown</span>
+<span class='line line-7 ' >        "Not sure how to greet you, #{name}"</span>
+<span class='line line-8 ' >      else</span>
+<span class='line line-9 ' >        "Hello #{name}"</span>
+<span class='line line-10 ' >      end</span>
+<span class='line line-11 ' >    }</span>
+<span class='line line-12 ' >  end</span>
+<span class='line line-13 ' >end</span></code></pre>
+</section>
+<section class='CODE'>
+<pre><code class='ruby' data-strikeouts='' data-callout-lines=''><span class='line line-1 ' >class BasicObject</span>
+<span class='line line-2 ' >  def when_known(&block)</span>
+<span class='line line-3 ' >    when_value(&block)</span>
+<span class='line line-4 ' >  end</span>
+<span class='line line-5 ' >end</span></code></pre>
+</section>
+<section class='CODE'>
+<pre><code class='ruby' data-strikeouts='' data-callout-lines=''><span class='line line-1 ' >class NilLikeSentinel</span>
+<span class='line line-2 ' >  def self.when_known(*)</span>
+<span class='line line-3 ' >    self</span>
+<span class='line line-4 ' >  end</span>
+<span class='line line-5 ' >end</span>
+<span class='line line-6 ' ></span>
+<span class='line line-7 ' >class KnownNilLikeSentinel < NilLikeSentinel</span>
+<span class='line line-8 ' >  def self.when_known(&block)</span>
+<span class='line line-9 ' >    block.call(self)</span>
+<span class='line line-10 ' >  end</span>
+<span class='line line-11 ' >end</span>
+<span class='line line-12 ' ></span>
+<span class='line line-13 ' >NoValue = Class.new(KnownNilLikeSentinel)</span>
+<span class='line line-14 ' >Empty   = Class.new(KnownNilLikeSentinel)</span></code></pre>
+</section>
+<section class='CODE'>
+<pre><code class='ruby' data-strikeouts='' data-callout-lines=''><span class='line line-1 ' >class Person</span>
+<span class='line line-2 ' >  def greet</span>
+<span class='line line-3 ' >    title.when_value {</span>
+<span class='line line-4 ' >      "Hello #{title} #{name}"</span>
+<span class='line line-5 ' >    }.when_known {</span>
+<span class='line line-6 ' >      "Hello #{name}"</span>
+<span class='line line-7 ' >    }.or_else {</span>
+<span class='line line-8 ' >      "Not sure how to greet you, #{name}"</span>
+<span class='line line-9 ' >    }</span>
+<span class='line line-10 ' >  end</span>
+<span class='line line-11 ' >end</span></code></pre>
+</section>
+<section class='NORMAL'>
+<h1><pre>NoMethodError: undefined method `frobnosticate' for <strong>Unassigned</strong>:Class</pre></h1>
+</section>
+<section class='NORMAL'>
+<h1><pre>NoMethodError: undefined method `frobnosticate' for <strong>NoValue</strong>:Class</pre></h1>
+</section>
+<section class='SECTION'>
+<h1>Attributes</h1>
+</section>
+<section class='BULLETS'>
+<h1>How to buy something</h1>
+<ul>
+<li>Take out wallet</li>
+<li>Hand to clerk</li>
+<li>Clerk finds cash or credit card</li>
+<li>Clerk pays</li>
+<li>Clerk hands you back your wallet</li>
+</ul>
+</section>
+<section class='CODE'>
+<pre><code class='ruby' data-strikeouts='' data-callout-lines=''><span class='line line-1 ' >class PersonGreeter</span>
+<span class='line line-2 ' >  def greet(person)</span>
+<span class='line line-3 ' >    if person.first_name.present?</span>
+<span class='line line-4 ' >      "Hi, #{person.first_name}"</span>
+<span class='line line-5 ' >    elsif person.last_name.present?</span>
+<span class='line line-6 ' >      if person.gender.present? && person.gender.salutation.present?</span>
+<span class='line line-7 ' >        "Hello #{person.gender.salutation} #{person.last_name}"</span>
+<span class='line line-8 ' >      else</span>
+<span class='line line-9 ' >        "Hello #{person.last_name}"</span>
+<span class='line line-10 ' >      end</span>
+<span class='line line-11 ' >    else</span>
+<span class='line line-12 ' >      "Hello"</span>
+<span class='line line-13 ' >    end</span>
+<span class='line line-14 ' >  end</span>
+<span class='line line-15 ' >end</span></code></pre>
+</section>
+<section class='CODE'>
+<pre><code class='ruby' data-strikeouts='' data-callout-lines=''><span class='line line-1 ' >class PersonGreeterAttributes</span>
+<span class='line line-2 ' >  def greet(person)</span>
+<span class='line line-3 ' >    person.with_attributes { |first_name|</span>
+<span class='line line-4 ' >      "Hi, #{first_name}"</span>
+<span class='line line-5 ' >    }.else_with_attributes { |gender_salutation,last_name|</span>
+<span class='line line-6 ' >      "Hello #{gender_salutation} #{last_name}"</span>
+<span class='line line-7 ' >    }.else_with_attributes { |last_name|</span>
+<span class='line line-8 ' >      "Hello #{last_name}"</span>
+<span class='line line-9 ' >    }.or_else {</span>
+<span class='line line-10 ' >      "Hello"</span>
+<span class='line line-11 ' >    }</span>
+<span class='line line-12 ' >  end</span>
+<span class='line line-13 ' >end</span></code></pre>
+</section>
+<section class='CODE'>
+<pre><code class='ruby' data-strikeouts='' data-callout-lines=''><span class='line line-1 ' >class AddressNormalizer</span>
+<span class='line line-2 ' >  def normalize_address(person)</span>
+<span class='line line-3 ' >    person.with_attributes { |city, zip_code|</span>
+<span class='line line-4 ' >      person.city     = city.strip.downcase</span>
+<span class='line line-5 ' >      person.zip_code = zipcode.strip.downcase</span>
+<span class='line line-6 ' >    }</span>
+<span class='line line-7 ' >  end</span>
+<span class='line line-8 ' >end</span></code></pre>
+</section>
+<section class='CODE'>
+<pre><code class='ruby' data-strikeouts='' data-callout-lines='5,6'><span class='line line-1 ' >class AddressNormalizer</span>
+<span class='line line-2 ' >  def normalize_address(person)</span>
+<span class='line line-3 ' >    person.with_attributes { |city, zip_code|</span>
+<span class='line line-4 ' >      person.update do |update|</span>
+<div class='lines-callout'><span class='line line-5 line-callout' >        update.city.to     city.strip.downcase</span>
+<span class='line line-6 line-callout' >        update.zip_code.to zip_code.strip.downcase</span>
+</div><span class='line line-7 ' >      end</span>
+<span class='line line-8 ' >    }</span>
+<span class='line line-9 ' >  end</span>
+<span class='line line-10 ' >end</span></code></pre>
+</section>
+<section class='CODE'>
+<pre><code class='ruby' data-strikeouts='' data-callout-lines=''><span class='line line-1 ' >class Person</span>
+<span class='line line-2 ' >  def update(&block)</span>
+<span class='line line-3 ' >    update = Update.new</span>
+<span class='line line-4 ' >    block.(update)</span>
+<span class='line line-5 ' ></span>
+<span class='line line-6 ' >    update.each_attribute do |name,new_value|</span>
+<span class='line line-7 ' >      instance_variable_set("@#{name}",new_value)</span>
+<span class='line line-8 ' >    end</span>
+<span class='line line-9 ' >  end</span>
+<span class='line line-10 ' >end</span></code></pre>
+</section>
+<section class='CODE'>
+<pre><code class='ruby' data-strikeouts='' data-callout-lines='5,9'><span class='line line-1 ' >class Person</span>
+<span class='line line-2 ' >  def update(&block)</span>
+<span class='line line-3 ' >    updater = Updater.new</span>
+<span class='line line-4 ' >    block.call(updater)</span>
+<div class='lines-callout'><span class='line line-5 line-callout' >    transaction do</span>
+</div><span class='line line-6 ' >      updater.changed_attributes { |attribute,new_value|</span>
+<span class='line line-7 ' >        self.instance_variable_set("@#{attribute}",value)</span>
+<span class='line line-8 ' >      }</span>
+<div class='lines-callout'><span class='line line-9 line-callout' >    end</span>
+</div><span class='line line-10 ' >  end</span>
+<span class='line line-11 ' >end</span></code></pre>
+</section>
+<section class='CODE'>
+<pre><code class='ruby' data-strikeouts='' data-callout-lines='5,6,7,8,9'><span class='line line-1 ' >class Person</span>
+<span class='line line-2 ' >  def update(&block)</span>
+<span class='line line-3 ' >    updater = Updater.new</span>
+<span class='line line-4 ' >    block.call(updater)</span>
+<div class='lines-callout'><span class='line line-5 line-callout' >    updater.when_updated do |city,zip_code|</span>
+<span class='line line-6 line-callout' >      unless zip_and_city_consistent?(updater.city,updater.zip_code)</span>
+<span class='line line-7 line-callout' >        raise "address not consistent"</span>
+<span class='line line-8 line-callout' >      end</span>
+<span class='line line-9 line-callout' >    end</span>
+</div><span class='line line-10 ' >    updater.changed_attributes { |attribute,new_value|</span>
+<span class='line line-11 ' >      self.instance_variable_set("@#{attribute}",value)</span>
+<span class='line line-12 ' >    }</span>
+<span class='line line-13 ' >  end</span>
+<span class='line line-14 ' >end</span></code></pre>
+</section>
+<section class='SECTION'>
+<h1><code>if</code></h1>
+</section>
+<section class='IMAGE' data-background='000'>
+<img src='images/asm.jpg'>
+</section>
+<section class='CODE'>
+<pre><code class='ruby' data-strikeouts='' data-callout-lines=''><span class='line line-1 ' >class CreditCardCharger</span>
+<span class='line line-2 ' >  def charge_customer(customer,amount)</span>
+<span class='line line-3 ' >    result = CreditCardService.charge!(customer,amount)</span>
+<span class='line line-4 ' >    unless result.success?</span>
+<span class='line line-5 ' >      if result.error_code == CreditCardService::EXPIRED</span>
+<span class='line line-6 ' >        "Your card has expired-update and try again"</span>
+<span class='line line-7 ' >      else</span>
+<span class='line line-8 ' >        "Sorry, your card was declined"</span>
+<span class='line line-9 ' >      end</span>
+<span class='line line-10 ' >    end</span>
+<span class='line line-11 ' >  rescue => ex</span>
+<span class='line line-12 ' >    ex.message</span>
+<span class='line line-13 ' >  end</span>
+<span class='line line-14 ' >end</span></code></pre>
+</section>
+<section class='CODE'>
+<pre><code class='ruby' data-strikeouts='' data-callout-lines=''><span class='line line-1 ' >class CreditCardChargerWeird</span>
+<span class='line line-2 ' >  def charge_customer(customer,amount)</span>
+<span class='line line-3 ' >    CreditCardServiceWeird.charge!(customer,amount) do |outcome|</span>
+<span class='line line-4 ' >      outcome.on_success {</span>
+<span class='line line-5 ' >        # ok!</span>
+<span class='line line-6 ' >      }.on_decline {</span>
+<span class='line line-7 ' >        "Sorry, your card was declined"</span>
+<span class='line line-8 ' >      }.on_expiration {</span>
+<span class='line line-9 ' >        "Your card has expired-update and try again"</span>
+<span class='line line-10 ' >      }.on_exception { |ex|</span>
+<span class='line line-11 ' >        ex.message</span>
+<span class='line line-12 ' >      }</span>
+<span class='line line-13 ' >    end</span>
+<span class='line line-14 ' >  end</span>
+<span class='line line-15 ' >end</span></code></pre>
+</section>
+<section class='CODE'>
+<pre><code class='ruby' data-strikeouts='8,9' data-callout-lines='8,9'><span class='line line-1 ' >class CreditCardChargerWeird</span>
+<span class='line line-2 ' >  def charge_customer(customer,amount)</span>
+<span class='line line-3 ' >    CreditCardServiceWeird.charge!(customer,amount) do |outcome|</span>
+<span class='line line-4 ' >      outcome.on_success {</span>
+<span class='line line-5 ' >        # ok!</span>
+<span class='line line-6 ' >      }.on_decline {</span>
+<span class='line line-7 ' >        "Sorry, your card was declined"</span>
+<div class='lines-callout'><span class='line line-8 line-callout' >      }.on_expiration {</span>
+<span class='line line-9 line-callout' >        "Your card has expired-update and try again"</span>
+</div><span class='line line-10 ' >      }.on_exception { |ex|</span>
+<span class='line line-11 ' >        ex.message</span>
+<span class='line line-12 ' >      }</span>
+<span class='line line-13 ' >    end</span>
+<span class='line line-14 ' >  end</span>
+<span class='line line-15 ' >end</span></code></pre>
+</section>
+<section class='CODE'>
+<pre><code class='ruby' data-strikeouts='' data-callout-lines=''><span class='line line-1 ' >class CreditCardChargerMistake</span>
+<span class='line line-2 ' >  def charge_customer(customer,amount)</span>
+<span class='line line-3 ' >    CreditCardServiceStrict.charge!(customer,amount) do |outcome|</span>
+<span class='line line-4 ' >      outcome.on_success {</span>
+<span class='line line-5 ' >        # ok!</span>
+<span class='line line-6 ' >      }.on_decline {</span>
+<span class='line line-7 ' >        "Sorry, your card was declined"</span>
+<span class='line line-8 ' >      }.on_exception { |ex|</span>
+<span class='line line-9 ' >        ex.message</span>
+<span class='line line-10 ' >      }</span>
+<span class='line line-11 ' >    end</span>
+<span class='line line-12 ' >  end</span>
+<span class='line line-13 ' >end</span></code></pre>
+</section>
+<section class='CODE'>
+<pre><code class='ruby' data-strikeouts='' data-callout-lines=''><span class='line line-1 ' >class CreditCardServiceStrict</span>
+<span class='line line-2 ' >  def self.charge!(customer,amount,&block)</span>
+<span class='line line-3 ' >    outcome = Outcome.new</span>
+<span class='line line-4 ' >    block.call(outcome)</span>
+<span class='line line-5 ' >    outcome.validate_all_outcomes_handled!</span>
+<span class='line line-6 ' ></span>
+<span class='line line-7 ' >    # ...</span>
+<span class='line line-8 ' >    </span>
+<span class='line line-9 ' >  end</span>
+<span class='line line-10 ' >end</span>
+<span class='line line-11 ' ></span></code></pre>
+</section>
+<section class='CODE'>
+<pre><code class='ruby' data-strikeouts='' data-callout-lines='7,8,9'><span class='line line-1 ' >class CreditCardServiceStrict</span>
+<span class='line line-2 ' >  def self.charge!(customer,amount,&block)</span>
+<span class='line line-3 ' >    outcome = Outcome.new</span>
+<span class='line line-4 ' >    block.call(outcome)</span>
+<span class='line line-5 ' >    outcome.validate_all_outcomes_handled!</span>
+<span class='line line-6 ' ></span>
+<div class='lines-callout'><span class='line line-7 line-callout' >    outcome.handle(</span>
+<span class='line line-8 line-callout' >      rest_call(make_url(customer,amount))</span>
+<span class='line line-9 line-callout' >    )</span>
+</div><span class='line line-10 ' ></span>
+<span class='line line-11 ' >  private</span>
+<span class='line line-12 ' ></span>
+<span class='line line-13 ' >    def rest_call(_)</span>
+<span class='line line-14 ' >      # ...</span>
+<span class='line line-15 ' >    end</span>
+<span class='line line-16 ' ></span>
+<span class='line line-17 ' >    def make_url(customer,amount)</span>
+<span class='line line-18 ' >      # ...</span>
+<span class='line line-19 ' >    end</span>
+<span class='line line-20 ' >  end</span>
+<span class='line line-21 ' >end</span>
+<span class='line line-22 ' ></span></code></pre>
+</section>
+<section class='CODE'>
+<pre><code class='ruby' data-strikeouts='' data-callout-lines='4,5,6,7,8,9,10'><span class='line line-1 ' >class Outcome</span>
+<span class='line line-2 ' >  def handle(result)</span>
+<span class='line line-3 ' >    status = result.status</span>
+<div class='lines-callout'><span class='line line-4 line-callout' >    method_name = if status == 200</span>
+<span class='line line-5 line-callout' >                    :call_on_success</span>
+<span class='line line-6 line-callout' >                  elsif status < 500</span>
+<span class='line line-7 line-callout' >                    :call_on_decline</span>
+<span class='line line-8 line-callout' >                  else</span>
+<span class='line line-9 line-callout' >                    :call_on_exception</span>
+<span class='line line-10 line-callout' >                  end</span>
+</div><span class='line line-11 ' >    self.send(method_name)</span>
+<span class='line line-12 ' >  end</span>
+<span class='line line-13 ' >end</span></code></pre>
+</section>
+<section class='CODE'>
+<pre><code class='ruby' data-strikeouts='' data-callout-lines='5'><span class='line line-1 ' >class OutcomeNoIf < Outcome</span>
+<span class='line line-2 ' >  def handle(result)</span>
+<span class='line line-3 ' >    status = result.status</span>
+<span class='line line-4 ' ></span>
+<div class='lines-callout'><span class='line line-5 line-callout' >    method_name = method_for_status(status)</span>
+</div><span class='line line-6 ' ></span>
+<span class='line line-7 ' >    self.send(method_name)</span>
+<span class='line line-8 ' >  end</span>
+<span class='line line-9 ' >end</span></code></pre>
+</section>
+<section class='CODE'>
+<pre><code class='ruby' data-strikeouts='' data-callout-lines=''><span class='line line-1 ' >class OutcomeNoIf < Outcome</span>
+<span class='line line-2 ' ></span>
+<span class='line line-3 ' >private </span>
+<span class='line line-4 ' ></span>
+<span class='line line-5 ' >  def method_for_status(status)</span>
+<span class='line line-6 ' ></span>
+<span class='line line-7 ' >                if ( status == 200 )  :call_on_success</span>
+<span class='line line-8 ' >                if ( status <  500 )  :call_on_decline</span>
+<span class='line line-9 ' ></span>
+<span class='line line-10 ' ></span>
+<span class='line line-11 ' ></span>
+<span class='line line-12 ' >    else      :call_on_exception</span>
+<span class='line line-13 ' >  end</span>
+<span class='line line-14 ' >end</span></code></pre>
+</section>
+<section class='CODE'>
+<pre><code class='ruby' data-strikeouts='' data-callout-lines=''><span class='line line-1 ' >class OutcomeNoIf < Outcome</span>
+<span class='line line-2 ' ></span>
+<span class='line line-3 ' >private </span>
+<span class='line line-4 ' ></span>
+<span class='line line-5 ' >  def method_for_status(status)</span>
+<span class='line line-6 ' ></span>
+<span class='line line-7 ' >       -> (status) { status == 200 }, :call_on_success</span>
+<span class='line line-8 ' >       -> (status) { status <  500 }, :call_on_decline</span>
+<span class='line line-9 ' ></span>
+<span class='line line-10 ' ></span>
+<span class='line line-11 ' ></span>
+<span class='line line-12 ' >    else      :call_on_exception</span>
+<span class='line line-13 ' >  end</span>
+<span class='line line-14 ' >end</span></code></pre>
+</section>
+<section class='CODE'>
+<pre><code class='ruby' data-strikeouts='' data-callout-lines=''><span class='line line-1 ' >class OutcomeNoIf < Outcome</span>
+<span class='line line-2 ' ></span>
+<span class='line line-3 ' >private </span>
+<span class='line line-4 ' ></span>
+<span class='line line-5 ' >  def method_for_status(status)</span>
+<span class='line line-6 ' >    [</span>
+<span class='line line-7 ' >     [ -> (status) { status == 200 }, :call_on_success ],</span>
+<span class='line line-8 ' >     [ -> (status) { status <  500 }, :call_on_decline ],</span>
+<span class='line line-9 ' >    ]</span>
+<span class='line line-10 ' >    </span>
+<span class='line line-11 ' >    </span>
+<span class='line line-12 ' >    else      :call_on_exception</span>
+<span class='line line-13 ' >  end</span>
+<span class='line line-14 ' >end</span></code></pre>
+</section>
+<section class='CODE'>
+<pre><code class='ruby' data-strikeouts='' data-callout-lines=''><span class='line line-1 ' >class OutcomeNoIf < Outcome</span>
+<span class='line line-2 ' ></span>
+<span class='line line-3 ' >private </span>
+<span class='line line-4 ' ></span>
+<span class='line line-5 ' >  def method_for_status(status)</span>
+<span class='line line-6 ' >    [</span>
+<span class='line line-7 ' >     [ -> (status) { status == 200 }, :call_on_success ],</span>
+<span class='line line-8 ' >     [ -> (status) { status <  500 }, :call_on_decline ],</span>
+<span class='line line-9 ' >    ].detect { |predicate,_|</span>
+<span class='line line-10 ' >      predicate.(status)</span>
+<span class='line line-11 ' >    }</span>
+<span class='line line-12 ' >    else      :call_on_exception</span>
+<span class='line line-13 ' >  end</span>
+<span class='line line-14 ' >end</span></code></pre>
+</section>
+<section class='CODE'>
+<pre><code class='ruby' data-strikeouts='' data-callout-lines=''><span class='line line-1 ' >class OutcomeNoIf < Outcome</span>
+<span class='line line-2 ' ></span>
+<span class='line line-3 ' >private </span>
+<span class='line line-4 ' ></span>
+<span class='line line-5 ' >  def method_for_status(status)</span>
+<span class='line line-6 ' >    _,method = [</span>
+<span class='line line-7 ' >      [ ->(status) { status == 200 }, :call_on_success ],</span>
+<span class='line line-8 ' >      [ ->(status) { status <  500 }, :call_on_decline ],</span>
+<span class='line line-9 ' >    ].detect { |predicate,_|</span>
+<span class='line line-10 ' >      predicate.(status)</span>
+<span class='line line-11 ' >    }</span>
+<span class='line line-12 ' >    method || :call_on_exception</span>
+<span class='line line-13 ' >  end</span>
+<span class='line line-14 ' >end</span></code></pre>
+</section>
+<section class='CODE'>
+<pre><code class='ruby' data-strikeouts='' data-callout-lines=''><span class='line line-1 ' >class Outcome</span>
+<span class='line line-2 ' >  def handle(result)</span>
+<span class='line line-3 ' >    status = result.status</span>
+<span class='line line-4 ' >    method_name = if status < 500</span>
+<span class='line line-5 ' >                    :call_on_decline</span>
+<span class='line line-6 ' >                  elsif status == 200</span>
+<span class='line line-7 ' >                    :call_on_success</span>
+<span class='line line-8 ' >                  else</span>
+<span class='line line-9 ' >                    :call_on_exception</span>
+<span class='line line-10 ' >                  end</span>
+<span class='line line-11 ' >    self.send(method_name)</span>
+<span class='line line-12 ' >  end</span>
+<span class='line line-13 ' >end</span></code></pre>
+</section>
+<section class='CODE'>
+<pre><code class='ruby' data-strikeouts='' data-callout-lines=''><span class='line line-1 ' >class OutcomeNoIf < Outcome</span>
+<span class='line line-2 ' ></span>
+<span class='line line-3 ' >private </span>
+<span class='line line-4 ' ></span>
+<span class='line line-5 ' >  def method_for_status(status)</span>
+<span class='line line-6 ' >    _,method = [</span>
+<span class='line line-7 ' >      [ ->(status) { status == 200 }, :call_on_success ],</span>
+<span class='line line-8 ' >      [ ->(status) { status <  500 }, :call_on_decline ],</span>
+<span class='line line-9 ' >    ].detect { |predicate,_|</span>
+<span class='line line-10 ' >      predicate.(status)</span>
+<span class='line line-11 ' >    }</span>
+<span class='line line-12 ' >    method || :call_on_exception</span>
+<span class='line line-13 ' >  end</span>
+<span class='line line-14 ' >end</span></code></pre>
+</section>
+<section class='CODE'>
+<pre><code class='ruby' data-strikeouts='' data-callout-lines=''><span class='line line-1 ' >class OutcomeNoIf < Outcome</span>
+<span class='line line-2 ' ></span>
+<span class='line line-3 ' >private </span>
+<span class='line line-4 ' ></span>
+<span class='line line-5 ' >  def method_for_status(status)</span>
+<span class='line line-6 ' >    logic = Logic.new</span>
+<span class='line line-7 ' ></span>
+<span class='line line-8 ' >    logic.on { |status| status == 200 }.then_return(:call_on_success)</span>
+<span class='line line-9 ' >    logic.on { |status| status  < 500 }.then_return(:call_on_decline)</span>
+<span class='line line-10 ' ></span>
+<span class='line line-11 ' >    logic.evaluate!(status, or_else: :call_on_exception)</span>
+<span class='line line-12 ' >    # => BOOM: NonExclusiveDisjunctionError</span>
+<span class='line line-13 ' >  end</span>
+<span class='line line-14 ' >end</span></code></pre>
+</section>
+<section class='CODE'>
+<pre><code class='ruby' data-strikeouts='' data-callout-lines='9'><span class='line line-1 ' >class OutcomeNoIf < Outcome</span>
+<span class='line line-2 ' ></span>
+<span class='line line-3 ' >private </span>
+<span class='line line-4 ' ></span>
+<span class='line line-5 ' >  def method_for_status(status)</span>
+<span class='line line-6 ' >    logic = Logic.new</span>
+<span class='line line-7 ' ></span>
+<span class='line line-8 ' >    logic.on { |status| status == 200 }.then_return(:call_on_success)</span>
+<div class='lines-callout'><span class='line line-9 line-callout' >    logic.on { |status| status != 200 && </span>
+</div><span class='line line-10 ' >                        status  < 500 }.then_return(:call_on_decline)</span>
+<span class='line line-11 ' ></span>
+<span class='line line-12 ' >    logic.evaluate!(status, or_else: :call_on_exception)</span>
+<span class='line line-13 ' >    # => All good!</span>
+<span class='line line-14 ' >  end</span>
+<span class='line line-15 ' >end</span></code></pre>
+</section>
+<section class='CODE'>
+<pre><code class='ruby' data-strikeouts='' data-callout-lines='8,9,14,15'><span class='line line-1 ' >class OutcomeNoIf < Outcome</span>
+<span class='line line-2 ' ></span>
+<span class='line line-3 ' >private </span>
+<span class='line line-4 ' ></span>
+<span class='line line-5 ' >  def method_for_status(status)</span>
+<span class='line line-6 ' >    logic = Logic.new</span>
+<span class='line line-7 ' ></span>
+<div class='lines-callout'><span class='line line-8 line-callout' >    logic.on(&Success).then_return(:call_on_success)</span>
+<span class='line line-9 line-callout' >    logic.on(&Decline).then_return(:call_on_decline)</span>
+</div><span class='line line-10 ' ></span>
+<span class='line line-11 ' >    logic.evaluate!(status, or_else: :call_on_exception)</span>
+<span class='line line-12 ' >  end</span>
+<span class='line line-13 ' ></span>
+<div class='lines-callout'><span class='line line-14 line-callout' >  Success = ->(status) { status == 200 }</span>
+<span class='line line-15 line-callout' >  Decline = ->(status) { !Success.(status) && status < 500 }</span>
+</div><span class='line line-16 ' >end</span></code></pre>
+</section>
+<section class='SECTION'>
+<h1>Whew!</h1>
+</section>
+<section class='BULLETS'>
+<h1>THANKS!</h1>
+<ul>
+<li><a href="https://github.com/davetron5000/weird-ruby">https://github.com/davetron5000/weird-ruby</a></li>
+<li>dave@stitchfix.com / @davetron5000</li>
+<li><a href="http://tech.stitchfix.com">tech.stitchfix.com</a></li>
+<li>http://farm2.staticflickr.com/1185/5112065674_84e67f1b41_o.jpg http://farm3.staticflickr.com/2568/4170365807_9964740034_b.jpg http://farm6.staticflickr.com/5229/5817035735_e99b206ae0_o.jpg http://farm7.staticflickr.com/6154/6254480784_1b80df41ee_b.jpg http://farm3.staticflickr.com/2554/3737568827_5f903cf17e_b.jpg</li>
+</ul>
+</section>
+
+    </div>
+    <aside id="timer">
+      <div id="clock">
+        <span class="hours">
+          <span id="hour">0</span> :
+        </span>
+        <span class="minutes">
+          <span id="minute">00</span> 
+        </span>
+        <span class="seconds"> : 
+          <span id="second">00</span>
+        </span>
+      </div>
+      <div id="controls">
+        <a id="stop" href="#" onclick="return TricksterTimer.stop();">◼</a>
+        <a id="play" href="#" onclick="return TricksterTimer.play();">▶</a>
+        <a id="pause" href="#" onclick="return TricksterTimer.pause();">▮▮</a>
+      </div>
+    </aside>    
+  </body>
+</html>
