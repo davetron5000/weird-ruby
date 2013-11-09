@@ -2,7 +2,7 @@ class OutcomeNoIf < Outcome
   def handle(result)
     status = result.status
 
-    method_name = method_for_status(status)
+    method_name = what_to_call(status)
 
     self.send(method_name)
   end

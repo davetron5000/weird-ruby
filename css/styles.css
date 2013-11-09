@@ -152,12 +152,12 @@ table {
   position: fixed;
   left: 1em;
   bottom: 1em;
-  color: white;
-  font-size: 200%; }
+  padding: 0.2em;
+  border-radius: 0.2em;
+  background: black; }
 
 #timer .seconds {
-  display: none;
-  /* remove this to show seconds elapsing */ }
+  font-size: 25%; }
 
 #timer .hours {
   display: none;
@@ -174,3 +174,20 @@ table {
 
 #timer #controls {
   display: none; }
+
+#timer.time-ok {
+  color: #b0d7d1;
+  font-size: 133%; }
+
+#timer.time-over {
+  background: white;
+  color: red;
+  font-size: 200%; }
+
+#timer.time-warn {
+  color: #eee249;
+  font-size: 150%; }
+
+#timer.time-alert {
+  color: red;
+  font-size: 175%; }

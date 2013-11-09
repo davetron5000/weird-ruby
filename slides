@@ -291,9 +291,6 @@ file://weird/lib/weird/anti_if/credit_card_service_strict.rb
 !CODE: language=ruby callout=7,8,9
 file://weird/lib/weird/anti_if/credit_card_service_strict_2.rb
 
-!CODE: language=ruby callout=4,5,6,7,8,9,10
-file://weird/lib/weird/anti_if/outcome_handler.rb
-
 !CODE: language=ruby callout=5
 file://weird/lib/weird/anti_if/outcome_handler_no_if.rb
 
@@ -302,7 +299,23 @@ class OutcomeNoIf < Outcome
 
 private 
 
-  def method_for_status(status)
+  def what_to_call(status)
+    if status == 200
+      :call_on_success
+    elsif status < 500
+      :call_on_decline
+    else
+      :call_on_exception
+    end
+  end
+end
+
+!CODE: language=ruby
+class OutcomeNoIf < Outcome
+
+private 
+
+  def what_to_call(status)
 
                 if ( status == 200 )  :call_on_success
                 if ( status <  500 )  :call_on_decline
@@ -318,7 +331,7 @@ class OutcomeNoIf < Outcome
 
 private 
 
-  def method_for_status(status)
+  def what_to_call(status)
 
        -> (status) { status == 200 }, :call_on_success
        -> (status) { status <  500 }, :call_on_decline
@@ -334,7 +347,7 @@ class OutcomeNoIf < Outcome
 
 private 
 
-  def method_for_status(status)
+  def what_to_call(status)
     [
      [ -> (status) { status == 200 }, :call_on_success ],
      [ -> (status) { status <  500 }, :call_on_decline ],
@@ -350,7 +363,7 @@ class OutcomeNoIf < Outcome
 
 private 
 
-  def method_for_status(status)
+  def what_to_call(status)
     [
      [ -> (status) { status == 200 }, :call_on_success ],
      [ -> (status) { status <  500 }, :call_on_decline ],
@@ -375,7 +388,7 @@ class OutcomeNoIf < Outcome
 
 private 
 
-  def method_for_status(status)
+  def what_to_call(status)
     logic = Logic.new
 
     logic.on { |status| status == 200 }.then_return(:call_on_success)
@@ -391,7 +404,7 @@ class OutcomeNoIf < Outcome
 
 private 
 
-  def method_for_status(status)
+  def what_to_call(status)
     logic = Logic.new
 
     logic.on { |status| status == 200 }.then_return(:call_on_success)
@@ -407,7 +420,7 @@ class OutcomeNoIf < Outcome
 
 private 
 
-  def method_for_status(status)
+  def what_to_call(status)
     logic = Logic.new
 
     logic.on { |status| status == 200 }.then_return(:call_on_success)
@@ -424,7 +437,7 @@ class OutcomeNoIf < Outcome
 
 private 
 
-  def method_for_status(status)
+  def what_to_call(status)
     logic = Logic.new
 
     logic.on(&Success).then_return(:call_on_success)
@@ -442,9 +455,9 @@ Whew!
 
 !BULLETS
 Work @ Stitch Fix
-* No Pro{ject,duct} Managers
-* No QA
 * A simple and totally working business model
+* Ruby, Rails, Continuous Deployment, Fun Problems
+* Product-minded Engineers—No Pro{ject,duct} Managers
 * Info <a href="http://tech.stitchfix.com">tech.stitchfix.com</a>
 
 !FREEFORM
@@ -459,6 +472,11 @@ Work @ Stitch Fix
     <td style="text-align: right"><h3>Source</h3></td>
     <td style="white-space: nowrap"><h3>@</h3></td>
     <td style="white-space: nowrap; text-align: left"><h3> <a href="http://bit.ly/weird-ruby-source">bit.ly/weird-ruby-source</a></h3></td>
+  </tr>
+  <tr>
+    <td style="text-align: right; white-space: nowrap; vertical-align: top"><h3>Jobs</h3></td>
+    <td style="white-space: nowrap; vertical-align: top"><h3>@</h3></td>
+    <td style="text-align:left; vertical-align: top"><h3> <a href="http://tech.stitchfix.com">tech.stitchfix.com</a></h3></td>
   </tr>
   <tr>
     <td style="text-align: right; white-space: nowrap; vertical-align: top"><h3>Buy my book</h3></td>

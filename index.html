@@ -535,26 +535,11 @@
 <span class='line line-22 ' ></span></code></pre>
 </section>
 <section class='CODE'>
-<pre><code class='ruby' data-strikeouts='' data-callout-lines='4,5,6,7,8,9,10'><span class='line line-1 ' >class Outcome</span>
-<span class='line line-2 ' >  def handle(result)</span>
-<span class='line line-3 ' >    status = result.status</span>
-<div class='lines-callout'><span class='line line-4 line-callout' >    method_name = if status == 200</span>
-<span class='line line-5 line-callout' >                    :call_on_success</span>
-<span class='line line-6 line-callout' >                  elsif status < 500</span>
-<span class='line line-7 line-callout' >                    :call_on_decline</span>
-<span class='line line-8 line-callout' >                  else</span>
-<span class='line line-9 line-callout' >                    :call_on_exception</span>
-<span class='line line-10 line-callout' >                  end</span>
-</div><span class='line line-11 ' >    self.send(method_name)</span>
-<span class='line line-12 ' >  end</span>
-<span class='line line-13 ' >end</span></code></pre>
-</section>
-<section class='CODE'>
 <pre><code class='ruby' data-strikeouts='' data-callout-lines='5'><span class='line line-1 ' >class OutcomeNoIf < Outcome</span>
 <span class='line line-2 ' >  def handle(result)</span>
 <span class='line line-3 ' >    status = result.status</span>
 <span class='line line-4 ' ></span>
-<div class='lines-callout'><span class='line line-5 line-callout' >    method_name = method_for_status(status)</span>
+<div class='lines-callout'><span class='line line-5 line-callout' >    method_name = what_to_call(status)</span>
 </div><span class='line line-6 ' ></span>
 <span class='line line-7 ' >    self.send(method_name)</span>
 <span class='line line-8 ' >  end</span>
@@ -565,7 +550,23 @@
 <span class='line line-2 ' ></span>
 <span class='line line-3 ' >private </span>
 <span class='line line-4 ' ></span>
-<span class='line line-5 ' >  def method_for_status(status)</span>
+<span class='line line-5 ' >  def what_to_call(status)</span>
+<span class='line line-6 ' >    if status == 200</span>
+<span class='line line-7 ' >      :call_on_success</span>
+<span class='line line-8 ' >    elsif status < 500</span>
+<span class='line line-9 ' >      :call_on_decline</span>
+<span class='line line-10 ' >    else</span>
+<span class='line line-11 ' >      :call_on_exception</span>
+<span class='line line-12 ' >    end</span>
+<span class='line line-13 ' >  end</span>
+<span class='line line-14 ' >end</span></code></pre>
+</section>
+<section class='CODE'>
+<pre><code class='ruby' data-strikeouts='' data-callout-lines=''><span class='line line-1 ' >class OutcomeNoIf < Outcome</span>
+<span class='line line-2 ' ></span>
+<span class='line line-3 ' >private </span>
+<span class='line line-4 ' ></span>
+<span class='line line-5 ' >  def what_to_call(status)</span>
 <span class='line line-6 ' ></span>
 <span class='line line-7 ' >                if ( status == 200 )  :call_on_success</span>
 <span class='line line-8 ' >                if ( status <  500 )  :call_on_decline</span>
@@ -581,7 +582,7 @@
 <span class='line line-2 ' ></span>
 <span class='line line-3 ' >private </span>
 <span class='line line-4 ' ></span>
-<span class='line line-5 ' >  def method_for_status(status)</span>
+<span class='line line-5 ' >  def what_to_call(status)</span>
 <span class='line line-6 ' ></span>
 <span class='line line-7 ' >       -> (status) { status == 200 }, :call_on_success</span>
 <span class='line line-8 ' >       -> (status) { status <  500 }, :call_on_decline</span>
@@ -597,7 +598,7 @@
 <span class='line line-2 ' ></span>
 <span class='line line-3 ' >private </span>
 <span class='line line-4 ' ></span>
-<span class='line line-5 ' >  def method_for_status(status)</span>
+<span class='line line-5 ' >  def what_to_call(status)</span>
 <span class='line line-6 ' >    [</span>
 <span class='line line-7 ' >     [ -> (status) { status == 200 }, :call_on_success ],</span>
 <span class='line line-8 ' >     [ -> (status) { status <  500 }, :call_on_decline ],</span>
@@ -613,7 +614,7 @@
 <span class='line line-2 ' ></span>
 <span class='line line-3 ' >private </span>
 <span class='line line-4 ' ></span>
-<span class='line line-5 ' >  def method_for_status(status)</span>
+<span class='line line-5 ' >  def what_to_call(status)</span>
 <span class='line line-6 ' >    [</span>
 <span class='line line-7 ' >     [ -> (status) { status == 200 }, :call_on_success ],</span>
 <span class='line line-8 ' >     [ -> (status) { status <  500 }, :call_on_decline ],</span>
@@ -629,7 +630,7 @@
 <span class='line line-2 ' ></span>
 <span class='line line-3 ' >private </span>
 <span class='line line-4 ' ></span>
-<span class='line line-5 ' >  def method_for_status(status)</span>
+<span class='line line-5 ' >  def what_to_call(status)</span>
 <span class='line line-6 ' >    _,method = [</span>
 <span class='line line-7 ' >      [ ->(status) { status == 200 }, :call_on_success ],</span>
 <span class='line line-8 ' >      [ ->(status) { status <  500 }, :call_on_decline ],</span>
@@ -660,7 +661,7 @@
 <span class='line line-2 ' ></span>
 <span class='line line-3 ' >private </span>
 <span class='line line-4 ' ></span>
-<span class='line line-5 ' >  def method_for_status(status)</span>
+<span class='line line-5 ' >  def what_to_call(status)</span>
 <span class='line line-6 ' >    _,method = [</span>
 <span class='line line-7 ' >      [ ->(status) { status == 200 }, :call_on_success ],</span>
 <span class='line line-8 ' >      [ ->(status) { status <  500 }, :call_on_decline ],</span>
@@ -676,7 +677,7 @@
 <span class='line line-2 ' ></span>
 <span class='line line-3 ' >private </span>
 <span class='line line-4 ' ></span>
-<span class='line line-5 ' >  def method_for_status(status)</span>
+<span class='line line-5 ' >  def what_to_call(status)</span>
 <span class='line line-6 ' >    logic = Logic.new</span>
 <span class='line line-7 ' ></span>
 <span class='line line-8 ' >    logic.on { |status| status == 200 }.then_return(:call_on_success)</span>
@@ -692,7 +693,7 @@
 <span class='line line-2 ' ></span>
 <span class='line line-3 ' >private </span>
 <span class='line line-4 ' ></span>
-<span class='line line-5 ' >  def method_for_status(status)</span>
+<span class='line line-5 ' >  def what_to_call(status)</span>
 <span class='line line-6 ' >    logic = Logic.new</span>
 <span class='line line-7 ' ></span>
 <span class='line line-8 ' >    logic.on { |status| status == 200 }.then_return(:call_on_success)</span>
@@ -708,7 +709,7 @@
 <span class='line line-2 ' ></span>
 <span class='line line-3 ' >private </span>
 <span class='line line-4 ' ></span>
-<span class='line line-5 ' >  def method_for_status(status)</span>
+<span class='line line-5 ' >  def what_to_call(status)</span>
 <span class='line line-6 ' >    logic = Logic.new</span>
 <span class='line line-7 ' ></span>
 <span class='line line-8 ' >    logic.on { |status| status == 200 }.then_return(:call_on_success)</span>
@@ -725,7 +726,7 @@
 <span class='line line-2 ' ></span>
 <span class='line line-3 ' >private </span>
 <span class='line line-4 ' ></span>
-<span class='line line-5 ' >  def method_for_status(status)</span>
+<span class='line line-5 ' >  def what_to_call(status)</span>
 <span class='line line-6 ' >    logic = Logic.new</span>
 <span class='line line-7 ' ></span>
 <div class='lines-callout'><span class='line line-8 line-callout' >    logic.on(&Success).then_return(:call_on_success)</span>
@@ -744,9 +745,9 @@
 <section class='BULLETS'>
 <h1>Work @ Stitch Fix</h1>
 <ul>
-<li>No Pro{ject,duct} Managers</li>
-<li>No QA</li>
 <li>A simple and totally working business model</li>
+<li>Ruby, Rails, Continuous Deployment, Fun Problems</li>
+<li>Product-minded Engineers—No Pro{ject,duct} Managers</li>
 <li>Info <a href="http://tech.stitchfix.com">tech.stitchfix.com</a></li>
 </ul>
 </section>
@@ -762,6 +763,11 @@
     <td style="text-align: right"><h3>Source</h3></td>
     <td style="white-space: nowrap"><h3>@</h3></td>
     <td style="white-space: nowrap; text-align: left"><h3> <a href="http://bit.ly/weird-ruby-source">bit.ly/weird-ruby-source</a></h3></td>
+  </tr>
+  <tr>
+    <td style="text-align: right; white-space: nowrap; vertical-align: top"><h3>Jobs</h3></td>
+    <td style="white-space: nowrap; vertical-align: top"><h3>@</h3></td>
+    <td style="text-align:left; vertical-align: top"><h3> <a href="http://tech.stitchfix.com">tech.stitchfix.com</a></h3></td>
   </tr>
   <tr>
     <td style="text-align: right; white-space: nowrap; vertical-align: top"><h3>Buy my book</h3></td>

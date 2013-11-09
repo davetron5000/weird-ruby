@@ -26,7 +26,10 @@ var TricksterDefaultConfig = {
   /** These keycodes, if encountered, will not be sent along
       to the browser.  Useful if there might be some vertical
       scrolling and 32/33/34 would otherwise scroll */
-  keyCodesPreventingDefault: [ 34, 32, 33 ]
+  keyCodesPreventingDefault: [ 34, 32, 33 ],
+  lengthMinutes: 60,  // how much time you have for your talk
+  lengthAlertAt: 55,  // when you need to be alerted to wrap it up
+  lengthWarnAt: 45    // when you want a warning
 };
 /** Loads Trickster.
  * config: configuration, or TricksterDefaultConfig to get the defaults
@@ -156,9 +159,6 @@ var TricksterLoader = function(config,functions) {
         }
         else if (direction == config.backSwipe) {
           Trickster.back();
-        }
-        else {
-          alert("Swiped " + direction);
         }
       },
     });
