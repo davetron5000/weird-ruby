@@ -453,12 +453,11 @@ end
 !SECTION
 Whew!
 
-!BULLETS
-Work @ Stitch Fix
-* A simple and totally working business model
-* Ruby, Rails, Continuous Deployment, Fun Problems
-* Product-minded Engineers—No Pro{ject,duct} Managers
-* Info <a href="http://tech.stitchfix.com">tech.stitchfix.com</a>
+!FREEFORM
+<h1>Stitch Fix</h1>
+<h2>Product-minded Engineers—No Pro{ject,duct} Managers</h2>
+<h2>A simple and functional business model</h2>
+<h2>Info <a href="http://tech.stitchfix.com">tech.stitchfix.com</a></h2>
 
 !FREEFORM
 <h1>THANKS!</1>
