@@ -52,13 +52,13 @@
       url("../fonts/788321/b70296e797104609960796bdb82c138a.svg#b70296e7-9710-4609-9607-96bdb82c138a") format("svg");
 }
 
-$serif:      "Serifa W01 45 Light";
-$serif-bold: "Serifa W01 55 Roman";
+$serif:      "Serifa W01 45 Light", "Century Schoolbook", serif;
+$serif-bold: "Serifa W01 55 Roman", "Century Schoolbook", serif;
 
-$sans-serif:      "Avenir LT W01 45 Book";
-$sans-serif-bold: "Avenir LT W01 85 Heavy";
+$sans-serif:      "Avenir LT W01 45 Book", "Century Gothic", Helvetica, Arial, sans-serif;
+$sans-serif-bold: "Avenir LT W01 85 Heavy", "Century Gothic", Helvetica, Arial, sans-serif;
 
-$monospace: "Source Code Pro";
+$monospace: "Source Code Pro", Consolas, Courier, monospace;
 
 @import "colors.scss";
 

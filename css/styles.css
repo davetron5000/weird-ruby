@@ -31,26 +31,26 @@
   src: url("../fonts/788321/ea7ab949b653455194573a4ccc00d16a.eot") format("eot"), url("../fonts/788321/675fde2f85734f91bea3266fb7ab1888.woff") format("woff"), url("../fonts/788321/ebee6742993a4386b7c3d51f3ab65784.ttf") format("truetype"), url("../fonts/788321/b70296e797104609960796bdb82c138a.svg#b70296e7-9710-4609-9607-96bdb82c138a") format("svg"); }
 
 h1 {
-  font-family: "Serifa W01 55 Roman"; }
+  font-family: "Serifa W01 55 Roman", "Century Schoolbook", serif; }
 
 h2, h3, h4 {
-  font-family: "Serifa W01 45 Light"; }
+  font-family: "Serifa W01 45 Light", "Century Schoolbook", serif; }
 
 .sans {
-  font-family: "Avenir LT W01 45 Book"; }
+  font-family: "Avenir LT W01 45 Book", "Century Gothic", Helvetica, Arial, sans-serif; }
 
 .mono {
-  font-family: "Source Code Pro"; }
+  font-family: "Source Code Pro", Consolas, Courier, monospace; }
 
 .small {
   font-size: 50%;
   font-style: italic; }
 
 p, blockquote, li, section.QUOTE h1, section.QUOTE2 h1 {
-  font-family: "Avenir LT W01 45 Book"; }
+  font-family: "Avenir LT W01 45 Book", "Century Gothic", Helvetica, Arial, sans-serif; }
 
 pre, code {
-  font-family: "Source Code Pro"; }
+  font-family: "Source Code Pro", Consolas, Courier, monospace; }
 
 h1 pre {
   font-weight: normal; }

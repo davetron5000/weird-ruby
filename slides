@@ -493,10 +493,9 @@ Work @ Stitch Fix
 !FREEFORM
 <h1>Colophon</h1>
 <hr style="width: 33%">
-<h2>Titles in Serifa</h2>
-<h2 class="mono">Code Listings in Source Code Pro</h2>
-<h2 class="sans">Other Text in Avenir</h2>
-<p class="small">All fonts may not be available over the web</p>
+<h2>Titles in Serifa (Century Schoolbook on web)</h3>
+<h2 class="mono">Code Listings in Source Code Pro (Consolas or Courier on web)</h3>
+<h2 class="sans">Other Text in Avenir (Century Gothic or Helvetica on web)</h3>
 <hr style="width: 33%">
 <h3>Make your own slideshow with <a href="http://github.com/davetron5000/trickster">trickster</a></h3>
 <div class="images">
