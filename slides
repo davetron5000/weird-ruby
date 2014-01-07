@@ -1,8 +1,8 @@
-Eliminating Branching, nil, and attributes—Let's get weird
+Are branching, null, and attributes all that OO? Let's get weird!
 !TITLE
-Eliminating Branching, nil, and attributes
-Let's get weird
-@davetron5000
+Are branching, null, and attributes all that OO?
+Let's get weird!
+David Copeland / @davetron5000
 
 !NORMAL
 STITCH FIX
@@ -82,35 +82,6 @@ class Person
 end
 
 !CODE: language=ruby
-class Person
-  attr_accessor :name, 
-                :birthdate 
-
-  def initialize(name,birthdate)
-    @name      = name
-    @birthdate = birthdate
-  end
-
-  def greeting
-    "Hello #{name}"
-  end
-end
-
-!CODE: language=ruby
-class TitledPerson < Person
-  attr_accessor :title
-
-  def initialize(name,birthdate,title)
-    super(name,birthdate)
-    @title = title
-  end
-
-  def greeting
-    "Hello #{title} #{name}"
-  end
-end
-
-!CODE: language=ruby
 $nil = Object.new do
   def nil?
     true
@@ -175,10 +146,19 @@ class Person
   end
 end
 
-!CODE
-person = Person.new("Bob",24.years.ago,NoValue)
-puts person.greet
-# => Hello NoValue Bob
+!CODE: callout=3,4,5,6
+class Person
+  def greet
+    if title == Unknown || 
+       title == NoValue ||
+       title == Unassigned ||
+       title == Empty
+      "Hello #{name}"
+    else
+      "Hello #{title} #{name}"
+    end
+  end
+end
 
 !CODE
 file://weird/lib/weird/person_greet_better.rb
@@ -190,9 +170,7 @@ file://weird/lib/weird/basic_object.rb
 file://weird/lib/weird/nil_like_sentinel.rb
 
 !CODE
-person = Person.new("Bob",24.years.ago,NoValue)
-puts person.greet
-# => Hello Bob
+file://weird/lib/weird/person_greet_better.rb
 
 !CODE: language=ruby
 file://weird/lib/weird/person_greet_known_naive.rb
@@ -206,22 +184,8 @@ file://weird/lib/weird/known_nil_like_sentinel.rb
 !CODE: language=ruby
 file://weird/lib/weird/person_greet_known_better.rb
 
-!NORMAL
-<pre>NoMethodError: undefined method `frobnosticate' for <strong>Unassigned</strong>:Class</pre>
-
-!NORMAL
-<pre>NoMethodError: undefined method `frobnosticate' for <strong>NoValue</strong>:Class</pre>
-
 !SECTION
 Attributes
-
-!BULLETS
-How to buy something
-- Take out wallet
-- Hand to clerk
-- Clerk finds cash or credit card
-- Clerk pays
-- Clerk hands you back your wallet
 
 !CODE: language=ruby
 file://weird/lib/weird/noattr/person_greeter.rb
@@ -240,7 +204,7 @@ file://weird/lib/weird/noattr/person_with_update.rb
 
 !CODE: language=ruby callout=5,9
 class Person
-  def update(&block)
+  def update_attributes(&block)
     updater = Updater.new
     block.call(updater)
     transaction do
@@ -253,7 +217,7 @@ end
 
 !CODE: language=ruby callout=5,6,7,8,9
 class Person
-  def update(&block)
+  def update_attributes(&block)
     updater = Updater.new
     block.call(updater)
     updater.when_updated do |city,zip_code|
@@ -463,31 +427,36 @@ Whew!
 <h1>THANKS!</1>
 <table><tbody>
   <tr>
-    <td style="text-align: right"><h3>Slides</h3></td>
+    <td style="text-align: right" colspan='2'><h3>Slides</h3></td>
     <td style="white-space: nowrap"><h3>@</h3></td>
     <td style="white-space: nowrap; text-align: left"><h3><a href="http://bit.ly/weird-ruby">bit.ly/weird-ruby</a></h3></td>
   </tr>
   <tr>
-    <td style="text-align: right"><h3>Source</h3></td>
+    <td style="text-align: right" colspan='2'><h3>Source</h3></td>
     <td style="white-space: nowrap"><h3>@</h3></td>
     <td style="white-space: nowrap; text-align: left"><h3> <a href="http://bit.ly/weird-ruby-source">bit.ly/weird-ruby-source</a></h3></td>
   </tr>
   <tr>
-    <td style="text-align: right; white-space: nowrap; vertical-align: top"><h3>Jobs</h3></td>
+    <td style="text-align: right; white-space: nowrap; vertical-align: top" colspan='2'><h3>Jobs</h3></td>
     <td style="white-space: nowrap; vertical-align: top"><h3>@</h3></td>
     <td style="text-align:left; vertical-align: top"><h3> <a href="http://tech.stitchfix.com">tech.stitchfix.com</a></h3></td>
   </tr>
   <tr>
-    <td style="text-align: right; white-space: nowrap; vertical-align: top"><h3>Buy my book</h3></td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td style="text-align: right; white-space: nowrap; vertical-align: top"><img class="shadow" src="images/cover.jpg" width='100'></td>
+    <td style="text-align: right; white-space: nowrap; vertical-align: top"><h3>Buy <em>The Senior Software Engineer</em>&nbsp;</h3></td>
     <td style="white-space: nowrap; vertical-align: top"><h3>@</h3></td>
-    <td style="text-align:left; vertical-align: top"><h3> <a href="http://sweng.me">sweng.me</a>, <strong>just $10 with code RUBYCONF</strong></h3></td>
+    <td style="text-align:left; vertical-align: top"><h3><a href="http://sweng.me">sweng.me</a><br>$10 with code<br><strong>codemash2014</strong></h3></td>
+  </tr>
+  <tr>
+    <td style="text-align: right; white-space: nowrap; vertical-align: top"><img class="shadow" src="images/dccar.jpg" width='100'></td>
+    <td style="text-align: right; white-space: nowrap; vertical-align: top"><h3>Buy <em>Build Awesome Command-Line<br>Apps in Ruby</em>&nbsp;</h3></td>
+    <td style="white-space: nowrap; vertical-align: top"><h3>@</h3></td>
+    <td style="text-align:left; vertical-align: top"><h3><a href="http://pragprog.com/book/dccar2">pragprog.com/book/dccar2</a><br>25% off with code<br><strong>codemash2014</strong></h3></td>
   </tr>
 </tbody></table>
-<!--
-<h2>Slides @ <a href="http://bit.ly/weird-ruby">bit.ly/weird-ruby</a></h2>
-<h2>Source @ <a href="http://bit.ly/weird-ruby-source">bit.ly/weird-ruby-source</a></h2>
-<h2>Buy my book @ <a href="http://sweng.me">sweng.me</a>, <strong>just $10 with code RUBYCONF</strong></h2>
--->
 
 !FREEFORM
 <h1>Colophon</h1>

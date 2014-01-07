@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Eliminating Branching, nil, and attributes—Let's get weird</title>
+    <title>Are branching, null, and attributes all that OO? Let's get weird!</title>
     <meta charset="utf-8">
-    <meta name="description" content="Eliminating Branching, nil, and attributes—Let's get weird">
+    <meta name="description" content="Are branching, null, and attributes all that OO? Let's get weird!">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="js/lib/jquery-1.8.0.min.js"></script>
     <script src="js/lib/highlight-7.1.min.js"></script>
@@ -32,9 +32,9 @@
   </head>
   <body><div id="contents">
     <section class='TITLE'>
-<h1>Eliminating Branching, nil, and attributes</h1>
-<h2>Let's get weird</h2>
-<h3>@davetron5000</h3>
+<h1>Are branching, null, and attributes all that OO?</h1>
+<h2>Let's get weird!</h2>
+<h3>David Copeland / @davetron5000</h3>
 </section>
 <section class='NORMAL'>
 <h1>STITCH FIX</h1>
@@ -116,35 +116,6 @@
 </div><span class='line line-18 ' >end</span></code></pre>
 </section>
 <section class='CODE'>
-<pre><code class='ruby' data-strikeouts='' data-callout-lines=''><span class='line line-1 ' >class Person</span>
-<span class='line line-2 ' >  attr_accessor :name, </span>
-<span class='line line-3 ' >                :birthdate </span>
-<span class='line line-4 ' ></span>
-<span class='line line-5 ' >  def initialize(name,birthdate)</span>
-<span class='line line-6 ' >    @name      = name</span>
-<span class='line line-7 ' >    @birthdate = birthdate</span>
-<span class='line line-8 ' >  end</span>
-<span class='line line-9 ' ></span>
-<span class='line line-10 ' >  def greeting</span>
-<span class='line line-11 ' >    "Hello #{name}"</span>
-<span class='line line-12 ' >  end</span>
-<span class='line line-13 ' >end</span></code></pre>
-</section>
-<section class='CODE'>
-<pre><code class='ruby' data-strikeouts='' data-callout-lines=''><span class='line line-1 ' >class TitledPerson < Person</span>
-<span class='line line-2 ' >  attr_accessor :title</span>
-<span class='line line-3 ' ></span>
-<span class='line line-4 ' >  def initialize(name,birthdate,title)</span>
-<span class='line line-5 ' >    super(name,birthdate)</span>
-<span class='line line-6 ' >    @title = title</span>
-<span class='line line-7 ' >  end</span>
-<span class='line line-8 ' ></span>
-<span class='line line-9 ' >  def greeting</span>
-<span class='line line-10 ' >    "Hello #{title} #{name}"</span>
-<span class='line line-11 ' >  end</span>
-<span class='line line-12 ' >end</span></code></pre>
-</section>
-<section class='CODE'>
 <pre><code class='ruby' data-strikeouts='' data-callout-lines=''><span class='line line-1 ' >$nil = Object.new do</span>
 <span class='line line-2 ' >  def nil?</span>
 <span class='line line-3 ' >    true</span>
@@ -215,9 +186,18 @@
 <span class='line line-9 ' >end</span></code></pre>
 </section>
 <section class='CODE'>
-<pre><code data-strikeouts='' data-callout-lines=''><span class='line line-1 ' >person = Person.new("Bob",24.years.ago,NoValue)</span>
-<span class='line line-2 ' >puts person.greet</span>
-<span class='line line-3 ' ># => Hello NoValue Bob</span></code></pre>
+<pre><code data-strikeouts='' data-callout-lines='3,4,5,6'><span class='line line-1 ' >class Person</span>
+<span class='line line-2 ' >  def greet</span>
+<div class='lines-callout'><span class='line line-3 line-callout' >    if title == Unknown || </span>
+<span class='line line-4 line-callout' >       title == NoValue ||</span>
+<span class='line line-5 line-callout' >       title == Unassigned ||</span>
+<span class='line line-6 line-callout' >       title == Empty</span>
+</div><span class='line line-7 ' >      "Hello #{name}"</span>
+<span class='line line-8 ' >    else</span>
+<span class='line line-9 ' >      "Hello #{title} #{name}"</span>
+<span class='line line-10 ' >    end</span>
+<span class='line line-11 ' >  end</span>
+<span class='line line-12 ' >end</span></code></pre>
 </section>
 <section class='CODE'>
 <pre><code class='ruby'data-strikeouts='' data-callout-lines=''><span class='line line-1 ' >class Person</span>
@@ -257,9 +237,15 @@
 <span class='line line-14 ' >Empty      = Class.new(NilLikeSentinel)</span></code></pre>
 </section>
 <section class='CODE'>
-<pre><code data-strikeouts='' data-callout-lines=''><span class='line line-1 ' >person = Person.new("Bob",24.years.ago,NoValue)</span>
-<span class='line line-2 ' >puts person.greet</span>
-<span class='line line-3 ' ># => Hello Bob</span></code></pre>
+<pre><code class='ruby'data-strikeouts='' data-callout-lines=''><span class='line line-1 ' >class Person</span>
+<span class='line line-2 ' >  def greet</span>
+<span class='line line-3 ' >    title.when_value {</span>
+<span class='line line-4 ' >      "Hello #{title} #{name}"</span>
+<span class='line line-5 ' >    }.or_else {</span>
+<span class='line line-6 ' >      "Hello #{name}"</span>
+<span class='line line-7 ' >    }</span>
+<span class='line line-8 ' >  end</span>
+<span class='line line-9 ' >end</span></code></pre>
 </section>
 <section class='CODE'>
 <pre><code class='ruby' data-strikeouts='' data-callout-lines=''><span class='line line-1 ' >class Person</span>
@@ -312,24 +298,8 @@
 <span class='line line-10 ' >  end</span>
 <span class='line line-11 ' >end</span></code></pre>
 </section>
-<section class='NORMAL'>
-<h1><pre>NoMethodError: undefined method `frobnosticate' for <strong>Unassigned</strong>:Class</pre></h1>
-</section>
-<section class='NORMAL'>
-<h1><pre>NoMethodError: undefined method `frobnosticate' for <strong>NoValue</strong>:Class</pre></h1>
-</section>
 <section class='SECTION'>
 <h1>Attributes</h1>
-</section>
-<section class='BULLETS'>
-<h1>How to buy something</h1>
-<ul>
-<li>Take out wallet</li>
-<li>Hand to clerk</li>
-<li>Clerk finds cash or credit card</li>
-<li>Clerk pays</li>
-<li>Clerk hands you back your wallet</li>
-</ul>
 </section>
 <section class='CODE'>
 <pre><code class='ruby' data-strikeouts='' data-callout-lines=''><span class='line line-1 ' >class PersonGreeter</span>
@@ -377,7 +347,7 @@
 <pre><code class='ruby' data-strikeouts='' data-callout-lines='5,6'><span class='line line-1 ' >class AddressNormalizer</span>
 <span class='line line-2 ' >  def normalize_address(person)</span>
 <span class='line line-3 ' >    person.with_attributes { |city, zip_code|</span>
-<span class='line line-4 ' >      person.update do |update|</span>
+<span class='line line-4 ' >      person.update_attributes do |update|</span>
 <div class='lines-callout'><span class='line line-5 line-callout' >        update.city.to     city.strip.downcase</span>
 <span class='line line-6 line-callout' >        update.zip_code.to zip_code.strip.downcase</span>
 </div><span class='line line-7 ' >      end</span>
@@ -387,7 +357,7 @@
 </section>
 <section class='CODE'>
 <pre><code class='ruby' data-strikeouts='' data-callout-lines=''><span class='line line-1 ' >class Person</span>
-<span class='line line-2 ' >  def update(&block)</span>
+<span class='line line-2 ' >  def update_attributes(&block)</span>
 <span class='line line-3 ' >    update = Update.new</span>
 <span class='line line-4 ' >    block.(update)</span>
 <span class='line line-5 ' ></span>
@@ -399,7 +369,7 @@
 </section>
 <section class='CODE'>
 <pre><code class='ruby' data-strikeouts='' data-callout-lines='5,9'><span class='line line-1 ' >class Person</span>
-<span class='line line-2 ' >  def update(&block)</span>
+<span class='line line-2 ' >  def update_attributes(&block)</span>
 <span class='line line-3 ' >    updater = Updater.new</span>
 <span class='line line-4 ' >    block.call(updater)</span>
 <div class='lines-callout'><span class='line line-5 line-callout' >    transaction do</span>
@@ -412,7 +382,7 @@
 </section>
 <section class='CODE'>
 <pre><code class='ruby' data-strikeouts='' data-callout-lines='5,6,7,8,9'><span class='line line-1 ' >class Person</span>
-<span class='line line-2 ' >  def update(&block)</span>
+<span class='line line-2 ' >  def update_attributes(&block)</span>
 <span class='line line-3 ' >    updater = Updater.new</span>
 <span class='line line-4 ' >    block.call(updater)</span>
 <div class='lines-callout'><span class='line line-5 line-callout' >    updater.when_updated do |city,zip_code|</span>
@@ -752,31 +722,36 @@
 <h1>THANKS!</1>
 <table><tbody>
   <tr>
-    <td style="text-align: right"><h3>Slides</h3></td>
+    <td style="text-align: right" colspan='2'><h3>Slides</h3></td>
     <td style="white-space: nowrap"><h3>@</h3></td>
     <td style="white-space: nowrap; text-align: left"><h3><a href="http://bit.ly/weird-ruby">bit.ly/weird-ruby</a></h3></td>
   </tr>
   <tr>
-    <td style="text-align: right"><h3>Source</h3></td>
+    <td style="text-align: right" colspan='2'><h3>Source</h3></td>
     <td style="white-space: nowrap"><h3>@</h3></td>
     <td style="white-space: nowrap; text-align: left"><h3> <a href="http://bit.ly/weird-ruby-source">bit.ly/weird-ruby-source</a></h3></td>
   </tr>
   <tr>
-    <td style="text-align: right; white-space: nowrap; vertical-align: top"><h3>Jobs</h3></td>
+    <td style="text-align: right; white-space: nowrap; vertical-align: top" colspan='2'><h3>Jobs</h3></td>
     <td style="white-space: nowrap; vertical-align: top"><h3>@</h3></td>
     <td style="text-align:left; vertical-align: top"><h3> <a href="http://tech.stitchfix.com">tech.stitchfix.com</a></h3></td>
   </tr>
   <tr>
-    <td style="text-align: right; white-space: nowrap; vertical-align: top"><h3>Buy my book</h3></td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td style="text-align: right; white-space: nowrap; vertical-align: top"><img class="shadow" src="images/cover.jpg" width='100'></td>
+    <td style="text-align: right; white-space: nowrap; vertical-align: top"><h3>Buy <em>The Senior Software Engineer</em>&nbsp;</h3></td>
     <td style="white-space: nowrap; vertical-align: top"><h3>@</h3></td>
-    <td style="text-align:left; vertical-align: top"><h3> <a href="http://sweng.me">sweng.me</a>, <strong>just $10 with code RUBYCONF</strong></h3></td>
+    <td style="text-align:left; vertical-align: top"><h3><a href="http://sweng.me">sweng.me</a><br>$10 with code<br><strong>codemash2014</strong></h3></td>
+  </tr>
+  <tr>
+    <td style="text-align: right; white-space: nowrap; vertical-align: top"><img class="shadow" src="images/dccar.jpg" width='100'></td>
+    <td style="text-align: right; white-space: nowrap; vertical-align: top"><h3>Buy <em>Build Awesome Command-Line<br>Apps in Ruby</em>&nbsp;</h3></td>
+    <td style="white-space: nowrap; vertical-align: top"><h3>@</h3></td>
+    <td style="text-align:left; vertical-align: top"><h3><a href="http://pragprog.com/book/dccar2">pragprog.com/book/dccar2</a><br>25% off with code<br><strong>codemash2014</strong></h3></td>
   </tr>
 </tbody></table>
-<!--
-<h2>Slides @ <a href="http://bit.ly/weird-ruby">bit.ly/weird-ruby</a></h2>
-<h2>Source @ <a href="http://bit.ly/weird-ruby-source">bit.ly/weird-ruby-source</a></h2>
-<h2>Buy my book @ <a href="http://sweng.me">sweng.me</a>, <strong>just $10 with code RUBYCONF</strong></h2>
--->
 </section>
 <section class='FREEFORM'>
 <h1>Colophon</h1>

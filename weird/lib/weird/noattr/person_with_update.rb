@@ -1,5 +1,5 @@
 class Person
-  def update(&block)
+  def update_attributes(&block)
     update = Update.new
     block.(update)
 

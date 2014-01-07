@@ -66,6 +66,16 @@ h1 {
   font-family: $serif-bold;
 }
 
+a, a:visited {
+  color: darken($dark-grey,10%);
+}
+
+.shadow {
+  -webkit-box-shadow: -3px 4px 19px 0px rgba(50, 50, 50, 0.75);
+  -moz-box-shadow:    -3px 4px 19px 0px rgba(50, 50, 50, 0.75);
+  box-shadow:         -3px 4px 19px 0px rgba(50, 50, 50, 0.75);
+}
+
 h2, h3, h4 {
   font-family: $serif;
 }
@@ -96,6 +106,10 @@ h1 pre {
 
 h1 pre strong {
   font-weight: bold;
+}
+
+h3 strong {
+  color: black;
 }
 
 section.TITLE, section.SECTION, section.IMAGE, section.NORMAL, section.FREEFORM {
@@ -148,6 +162,11 @@ section.COMMANDLINE code {
 section.QUOTE, section.QUOTE2 {
   margin:2em;
   font-style: italic;
+  padding: 1em;
+  background: $light-grey;
+  -webkit-box-shadow: 0px 0.2em 1em 0px $dark-grey-75;//rgba(50, 50, 50, 0.75);
+  -moz-box-shadow:    0px 0.2em 1em 0px $dark-grey-75;//rgba(50, 50, 50, 0.75);
+  box-shadow:         0px 0.2em 1em 0px $dark-grey-75;//rgba(50, 50, 50, 0.75);
   strong {
     font-weight: bold;
     font-style: normal;
