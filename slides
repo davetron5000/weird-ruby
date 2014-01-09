@@ -39,7 +39,7 @@ This has led to innumerable errors, vulnerabilities, and system crashes, which h
 No More <code>nil</code>
 * all variables must have a value
 * no default value
-* no global sentinel for "nothing"
+* no global symbol for "nothing"
 
 !CODE: callout=6
 
@@ -125,22 +125,11 @@ class Person
   end
 end
 
-!CODE: callout=3
-class Person
-  def greet
-    if title == Unknown
-      "Hello #{name}"
-    else
-      "Hello #{title} #{name}"
-    end
-  end
-end
-
 !CODE: callout=3,4,5,6
 class Person
   def greet
-    if title == Unknown || 
-       title == NoValue ||
+    if title == Unknown    || 
+       title == NoValue    ||
        title == Unassigned ||
        title == Empty
       "Hello #{name}"
@@ -162,14 +151,17 @@ file://weird/lib/weird/nil_like_sentinel.rb
 !CODE
 file://weird/lib/weird/person_greet_better.rb
 
-!CODE: language=ruby
+!CODE: language=ruby callout=6
 file://weird/lib/weird/person_greet_known_naive.rb
 
 !CODE: language=ruby
 file://weird/lib/weird/known_basic_object.rb
 
 !CODE: language=ruby
-file://weird/lib/weird/known_nil_like_sentinel.rb
+file://weird/lib/weird/known_nil_like_sentinel_default.rb
+
+!CODE: language=ruby
+file://weird/lib/weird/known_nil_like_sentinel_known.rb
 
 !CODE: language=ruby
 file://weird/lib/weird/person_greet_known_better.rb
@@ -221,6 +213,24 @@ class Person
   end
 end
 
+!CODE: language=ruby callout=9,10,11
+class Person
+  def update_attributes(&block)
+    updater = Updater.new
+    block.call(updater)
+    updater.when_updated { |city,zip_code|
+      unless zip_and_city_consistent?(updater.city,updater.zip_code)
+        raise "address not consistent"
+      end
+    }.else_when_updated { |city|
+      raise "you cannot update the city without also updating the zipcode"
+    }
+    updater.changed_attributes { |attribute,new_value|
+      self.instance_variable_set("@#{attribute}",value)
+    }
+  end
+end
+
 !SECTION
 <code>if</code>
 
@@ -239,7 +249,7 @@ file://weird/lib/weird/anti_if/use_credit_card_service_better.rb
 !CODE: language=ruby
 file://weird/lib/weird/anti_if/credit_card_charger_mistake.rb
 
-!CODE: language=ruby
+!CODE: language=ruby callout=5
 file://weird/lib/weird/anti_if/credit_card_service_strict.rb
 
 !CODE: language=ruby callout=7,8,9

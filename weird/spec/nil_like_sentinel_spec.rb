@@ -2,7 +2,8 @@ require 'spec_helper'
 require 'weird/basic_object'
 require 'weird/known_basic_object'
 require 'weird/nil_like_sentinel'
-require 'weird/known_nil_like_sentinel'
+require 'weird/known_nil_like_sentinel_default'
+require 'weird/known_nil_like_sentinel_known'
 
 describe NilLikeSentinel do
   [Unassigned, Unknown, NoValue, Empty].each do |klass|

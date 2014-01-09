@@ -72,7 +72,7 @@
 <ul>
 <li>all variables must have a value</li>
 <li>no default value</li>
-<li>no global sentinel for "nothing"</li>
+<li>no global symbol for "nothing"</li>
 </ul>
 </section>
 <section class='CODE'>
@@ -165,21 +165,10 @@
 <span class='line line-8 ' >end</span></code></pre>
 </section>
 <section class='CODE'>
-<pre><code data-strikeouts='' data-callout-lines='3'><span class='line line-1 ' >class Person</span>
-<span class='line line-2 ' >  def greet</span>
-<div class='lines-callout'><span class='line line-3 line-callout' >    if title == Unknown</span>
-</div><span class='line line-4 ' >      "Hello #{name}"</span>
-<span class='line line-5 ' >    else</span>
-<span class='line line-6 ' >      "Hello #{title} #{name}"</span>
-<span class='line line-7 ' >    end</span>
-<span class='line line-8 ' >  end</span>
-<span class='line line-9 ' >end</span></code></pre>
-</section>
-<section class='CODE'>
 <pre><code data-strikeouts='' data-callout-lines='3,4,5,6'><span class='line line-1 ' >class Person</span>
 <span class='line line-2 ' >  def greet</span>
-<div class='lines-callout'><span class='line line-3 line-callout' >    if title == Unknown || </span>
-<span class='line line-4 line-callout' >       title == NoValue ||</span>
+<div class='lines-callout'><span class='line line-3 line-callout' >    if title == Unknown    || </span>
+<span class='line line-4 line-callout' >       title == NoValue    ||</span>
 <span class='line line-5 line-callout' >       title == Unassigned ||</span>
 <span class='line line-6 line-callout' >       title == Empty</span>
 </div><span class='line line-7 ' >      "Hello #{name}"</span>
@@ -238,15 +227,15 @@
 <span class='line line-9 ' >end</span></code></pre>
 </section>
 <section class='CODE'>
-<pre><code class='ruby' data-strikeouts='' data-callout-lines=''><span class='line line-1 ' >class Person</span>
+<pre><code class='ruby' data-strikeouts='' data-callout-lines='6'><span class='line line-1 ' >class Person</span>
 <span class='line line-2 ' >  def greet</span>
 <span class='line line-3 ' >    title.when_value {</span>
 <span class='line line-4 ' >      "Hello #{title} #{name}"</span>
 <span class='line line-5 ' >    }.or_else {</span>
-<span class='line line-6 ' >      if title == Unassigned || title == Unknown</span>
-<span class='line line-7 ' >        "Not sure how to greet you, #{name}"</span>
+<div class='lines-callout'><span class='line line-6 line-callout' >      if title == NoValue || title == Empty</span>
+</div><span class='line line-7 ' >        "Hello #{name}"</span>
 <span class='line line-8 ' >      else</span>
-<span class='line line-9 ' >        "Hello #{name}"</span>
+<span class='line line-9 ' >        "Not sure how to greet you, #{name}"</span>
 <span class='line line-10 ' >      end</span>
 <span class='line line-11 ' >    }</span>
 <span class='line line-12 ' >  end</span>
@@ -264,16 +253,17 @@
 <span class='line line-2 ' >  def self.when_known(*)</span>
 <span class='line line-3 ' >    self</span>
 <span class='line line-4 ' >  end</span>
+<span class='line line-5 ' >end</span></code></pre>
+</section>
+<section class='CODE'>
+<pre><code class='ruby' data-strikeouts='' data-callout-lines=''><span class='line line-1 ' >class KnownNilLikeSentinel < NilLikeSentinel</span>
+<span class='line line-2 ' >  def self.when_known(&block)</span>
+<span class='line line-3 ' >    block.call(self)</span>
+<span class='line line-4 ' >  end</span>
 <span class='line line-5 ' >end</span>
 <span class='line line-6 ' ></span>
-<span class='line line-7 ' >class KnownNilLikeSentinel < NilLikeSentinel</span>
-<span class='line line-8 ' >  def self.when_known(&block)</span>
-<span class='line line-9 ' >    block.call(self)</span>
-<span class='line line-10 ' >  end</span>
-<span class='line line-11 ' >end</span>
-<span class='line line-12 ' ></span>
-<span class='line line-13 ' >NoValue = Class.new(KnownNilLikeSentinel)</span>
-<span class='line line-14 ' >Empty   = Class.new(KnownNilLikeSentinel)</span></code></pre>
+<span class='line line-7 ' >NoValue = Class.new(KnownNilLikeSentinel)</span>
+<span class='line line-8 ' >Empty   = Class.new(KnownNilLikeSentinel)</span></code></pre>
 </section>
 <section class='CODE'>
 <pre><code class='ruby' data-strikeouts='' data-callout-lines=''><span class='line line-1 ' >class Person</span>
@@ -386,6 +376,24 @@
 <span class='line line-13 ' >  end</span>
 <span class='line line-14 ' >end</span></code></pre>
 </section>
+<section class='CODE'>
+<pre><code class='ruby' data-strikeouts='' data-callout-lines='9,10,11'><span class='line line-1 ' >class Person</span>
+<span class='line line-2 ' >  def update_attributes(&block)</span>
+<span class='line line-3 ' >    updater = Updater.new</span>
+<span class='line line-4 ' >    block.call(updater)</span>
+<span class='line line-5 ' >    updater.when_updated { |city,zip_code|</span>
+<span class='line line-6 ' >      unless zip_and_city_consistent?(updater.city,updater.zip_code)</span>
+<span class='line line-7 ' >        raise "address not consistent"</span>
+<span class='line line-8 ' >      end</span>
+<div class='lines-callout'><span class='line line-9 line-callout' >    }.else_when_updated { |city|</span>
+<span class='line line-10 line-callout' >      raise "you cannot update the city without also updating the zipcode"</span>
+<span class='line line-11 line-callout' >    }</span>
+</div><span class='line line-12 ' >    updater.changed_attributes { |attribute,new_value|</span>
+<span class='line line-13 ' >      self.instance_variable_set("@#{attribute}",value)</span>
+<span class='line line-14 ' >    }</span>
+<span class='line line-15 ' >  end</span>
+<span class='line line-16 ' >end</span></code></pre>
+</section>
 <section class='SECTION'>
 <h1><code>if</code></h1>
 </section>
@@ -458,12 +466,12 @@
 <span class='line line-13 ' >end</span></code></pre>
 </section>
 <section class='CODE'>
-<pre><code class='ruby' data-strikeouts='' data-callout-lines=''><span class='line line-1 ' >class CreditCardServiceStrict</span>
+<pre><code class='ruby' data-strikeouts='' data-callout-lines='5'><span class='line line-1 ' >class CreditCardServiceStrict</span>
 <span class='line line-2 ' >  def self.charge!(customer,amount,&block)</span>
 <span class='line line-3 ' >    outcome = Outcome.new</span>
 <span class='line line-4 ' >    block.call(outcome)</span>
-<span class='line line-5 ' >    outcome.validate_all_outcomes_handled!</span>
-<span class='line line-6 ' ></span>
+<div class='lines-callout'><span class='line line-5 line-callout' >    outcome.validate_all_outcomes_handled!</span>
+</div><span class='line line-6 ' ></span>
 <span class='line line-7 ' >    # ...</span>
 <span class='line line-8 ' >    </span>
 <span class='line line-9 ' >  end</span>
