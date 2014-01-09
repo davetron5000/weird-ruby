@@ -147,7 +147,7 @@
 <section class='CODE'>
 <pre><code data-strikeouts='' data-callout-lines='3'><span class='line line-1 ' >class Person</span>
 <span class='line line-2 ' >  attr_accessor :name, :birthdate, :title</span>
-<div class='lines-callout'><span class='line line-3 line-callout' >  def initialize(name, birthdate, title=Unknown)</span>
+<div class='lines-callout'><span class='line line-3 line-callout' >  def initialize(name, birthdate, title=NoValue)</span>
 </div><span class='line line-4 ' >    @name      = name</span>
 <span class='line line-5 ' >    @birthdate = birthdate</span>
 <span class='line line-6 ' >    @title     = title</span>
@@ -157,18 +157,8 @@
 <section class='CODE'>
 <pre><code data-strikeouts='' data-callout-lines='3'><span class='line line-1 ' >class Person</span>
 <span class='line line-2 ' >  attr_accessor :name, :birthdate, :title</span>
-<div class='lines-callout'><span class='line line-3 line-callout' >  def initialize(name, birthdate, title=NoValue)</span>
+<div class='lines-callout'><span class='line line-3 line-callout' >  def initialize(name, birthdate, title=Unknown)</span>
 </div><span class='line line-4 ' >    @name      = name</span>
-<span class='line line-5 ' >    @birthdate = birthdate</span>
-<span class='line line-6 ' >    @title     = title</span>
-<span class='line line-7 ' >  end</span>
-<span class='line line-8 ' >end</span></code></pre>
-</section>
-<section class='CODE'>
-<pre><code data-strikeouts='' data-callout-lines=''><span class='line line-1 ' >class Person</span>
-<span class='line line-2 ' >  attr_accessor :name, :birthdate, :title</span>
-<span class='line line-3 ' >  def initialize(name, birthdate, title=Unknown)</span>
-<span class='line line-4 ' >    @name      = name</span>
 <span class='line line-5 ' >    @birthdate = birthdate</span>
 <span class='line line-6 ' >    @title     = title</span>
 <span class='line line-7 ' >  end</span>

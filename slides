@@ -108,16 +108,6 @@ file://weird/lib/weird/nil_like.rb
 !CODE: callout=3
 class Person
   attr_accessor :name, :birthdate, :title
-  def initialize(name, birthdate, title=Unknown)
-    @name      = name
-    @birthdate = birthdate
-    @title     = title
-  end
-end
-
-!CODE: callout=3
-class Person
-  attr_accessor :name, :birthdate, :title
   def initialize(name, birthdate, title=NoValue)
     @name      = name
     @birthdate = birthdate
@@ -125,7 +115,7 @@ class Person
   end
 end
 
-!CODE
+!CODE: callout=3
 class Person
   attr_accessor :name, :birthdate, :title
   def initialize(name, birthdate, title=Unknown)
