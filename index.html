@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Are branching, null, and attributes all that OO? Let's get weird!</title>
+    <title>Let's write some weird Ruby</title>
     <meta charset="utf-8">
-    <meta name="description" content="Are branching, null, and attributes all that OO? Let's get weird!">
+    <meta name="description" content="Let's write some weird Ruby">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="js/lib/jquery-1.8.0.min.js"></script>
     <script src="js/lib/highlight-7.1.min.js"></script>
@@ -32,25 +32,20 @@
   </head>
   <body><div id="contents">
     <section class='TITLE'>
-<h1>Are branching, null, and attributes all that OO?</h1>
-<h2>Let's get weird!</h2>
-<h3>David Copeland / @davetron5000</h3>
-</section>
-<section class='NORMAL'>
-<h1>STITCH FIX</h1>
-<h2>Lead Engineer</h2>
-</section>
-<section class='IMAGE' data-background='EFEFEF'>
-<img src='images/dccar.jpg'>
-</section>
-<section class='IMAGE' data-background='EFEFEF'>
-<img src='images/cover.jpg'>
+<h1>Let's write some weird Ruby</h1>
+<h2>David Copeland / @davetron5000</h2>
 </section>
 <section class='IMAGE'>
 <img src='images/top_chef.jpg'>
 </section>
 <section class='IMAGE'>
 <img src='images/daikon.jpg'>
+</section>
+<section class='IMAGE'>
+<img src='images/asian.jpg'>
+</section>
+<section class='IMAGE'>
+<img src='images/french.jpg'>
 </section>
 <section class='IMAGE'>
 <img src='images/asian.jpg'>
@@ -135,7 +130,7 @@
 <li>Variable unset</li>
 <li>Don't know value</li>
 <li>There is no value</li>
-<li>Value is "empty"</li>
+<li>Value is “empty”</li>
 </ul>
 </section>
 <section class='CODE'>
@@ -631,8 +626,8 @@
 <span class='line line-4 ' ></span>
 <span class='line line-5 ' >  def what_to_call(status)</span>
 <span class='line line-6 ' >    _,method = [</span>
-<span class='line line-7 ' >      [ ->(status) { status == 200 }, :call_on_success ],</span>
-<span class='line line-8 ' >      [ ->(status) { status <  500 }, :call_on_decline ],</span>
+<span class='line line-7 ' >      [ ->(status) { status <  500 }, :call_on_decline ],</span>
+<span class='line line-8 ' >      [ ->(status) { status == 200 }, :call_on_success ],</span>
 <span class='line line-9 ' >    ].detect { |predicate,_|</span>
 <span class='line line-10 ' >      predicate.(status)</span>
 <span class='line line-11 ' >    }</span>
@@ -648,8 +643,8 @@
 <span class='line line-5 ' >  def what_to_call(status)</span>
 <span class='line line-6 ' >    logic = Logic.new</span>
 <span class='line line-7 ' ></span>
-<span class='line line-8 ' >    logic.on { |status| status == 200 }.then_return(:call_on_success)</span>
-<span class='line line-9 ' >    logic.on { |status| status  < 500 }.then_return(:call_on_decline)</span>
+<span class='line line-8 ' >    logic.on { |status| status  < 500 }.then_return(:call_on_decline)</span>
+<span class='line line-9 ' >    logic.on { |status| status == 200 }.then_return(:call_on_success)</span>
 <span class='line line-10 ' ></span>
 <span class='line line-11 ' >    logic.evaluate!(status, or_else: :call_on_exception)</span>
 <span class='line line-12 ' ></span>
@@ -664,8 +659,8 @@
 <span class='line line-5 ' >  def what_to_call(status)</span>
 <span class='line line-6 ' >    logic = Logic.new</span>
 <span class='line line-7 ' ></span>
-<span class='line line-8 ' >    logic.on { |status| status == 200 }.then_return(:call_on_success)</span>
-<span class='line line-9 ' >    logic.on { |status| status  < 500 }.then_return(:call_on_decline)</span>
+<span class='line line-8 ' >    logic.on { |status| status  < 500 }.then_return(:call_on_decline)</span>
+<span class='line line-9 ' >    logic.on { |status| status == 200 }.then_return(:call_on_success)</span>
 <span class='line line-10 ' ></span>
 <div class='lines-callout'><span class='line line-11 line-callout' >    logic.evaluate!(status, or_else: :call_on_exception)</span>
 <span class='line line-12 line-callout' >    # => BOOM: NonExclusiveDisjunctionError</span>
@@ -712,7 +707,8 @@
 </section>
 <section class='FREEFORM'>
 <h1>Stitch Fix</h1>
-<h2>Product-minded Engineers—No Pro{ject,duct} Managers</h2>
+<h2>Product-minded Engineers</h2>
+<h2>No Pro{ject,duct} Managers</h2>
 <h2>A simple and functional business model</h2>
 <h2>Info <a href="http://tech.stitchfix.com">tech.stitchfix.com</a></h2>
 </section>
@@ -739,15 +735,9 @@
   </tr>
   <tr>
     <td style="text-align: right; white-space: nowrap; vertical-align: top"><img class="shadow" src="images/cover.jpg" width='100'></td>
-    <td style="text-align: right; white-space: nowrap; vertical-align: top"><h3>Buy <em>The Senior Software Engineer</em>&nbsp;</h3></td>
+    <td style="text-align: right; white-space: nowrap; vertical-align: top; padding-right: 0.1em;"><h3>Buy <em>The Senior<br>Software Engineer</em>&nbsp;</h3></td>
     <td style="white-space: nowrap; vertical-align: top"><h3>@</h3></td>
-    <td style="text-align:left; vertical-align: top"><h3><a href="http://sweng.me">sweng.me</a><br>$10 with code<br><strong>codemash2014</strong></h3></td>
-  </tr>
-  <tr>
-    <td style="text-align: right; white-space: nowrap; vertical-align: top"><img class="shadow" src="images/dccar.jpg" width='100'></td>
-    <td style="text-align: right; white-space: nowrap; vertical-align: top"><h3>Buy <em>Build Awesome Command-Line<br>Apps in Ruby</em>&nbsp;</h3></td>
-    <td style="white-space: nowrap; vertical-align: top"><h3>@</h3></td>
-    <td style="text-align:left; vertical-align: top"><h3><a href="http://pragprog.com/book/dccar2">pragprog.com/book/dccar2</a><br>25% off with code<br><strong>codemash2014</strong></h3></td>
+    <td style="text-align:left; vertical-align: top"><h3><a href="http://sweng.me">sweng.me</a><br>$12.50 with code<br><strong>ancient</strong></h3></td>
   </tr>
 </tbody></table>
 </section>
